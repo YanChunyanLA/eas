@@ -59,10 +59,9 @@ class DE(BaseEA):
                     else:
                         trial_solution.vector[k] = self.solutions[j].vector[k]
 
+                trial_solution.amend_vector(self.U, self.L)
                 target_fitness = self.solutions[j].apply_fitness_func(self.fitness_func)
                 trial_fitness = trial_solution.apply_fitness_func(self.fitness_func)
-
-                trial_solution.amend_vector(self.U, self.L)
                 
                 if (self.is_minimal and trial_fitness < target_fitness) or (not self.is_minimal and trial_fitness > target_fitness):
                     self.solutions[j] = trial_solution

@@ -35,10 +35,10 @@ class RandomFactor(Factor):
         self.has_direct = has_direct
 
         if not helper.check_is_range(self.l, 2):
-            raise('the length of the range must be 2')
+            raise ValueError('the length of the range must be 2')
 
     def random(self, g):
-        v = random.random()
+        v = self.l[0] + random.random() * (self.l[1] - self.l[0])
 
         if not self.has_direct:
             return v

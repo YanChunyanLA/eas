@@ -39,6 +39,7 @@ de.register_strategy('selection_base', selection.best)
 
 de.fit(GEN)
 
+# 画图操作
 plt.scatter(np.arange(1, GEN + 1), [math.log(v) for v in de.history_best_fitness])
 plt.xlabel('Gen')
 plt.ylabel('log(f(x))')

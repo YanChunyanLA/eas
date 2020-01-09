@@ -80,9 +80,10 @@ class BaseEA(object):
     def is_maximal(self):
         self.is_minimal = False
 
-    # 每一次迭代中，需要将最优适应值保存
-    # 存入 self.history_best_fitness 列表中
     def append_best_fitness(self):
+        '''每一次迭代中，需要将最优适应值保存
+        存入 self.history_best_fitness 列表中
+        '''
         fitness_list = [s.apply_fitness_func(self.fitness_func) for s in self.solutions]
         fitness = min(fitness_list) if self.is_minimal else max(fitness_list)
 
