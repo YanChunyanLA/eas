@@ -1,20 +1,35 @@
-from .factor import Factor
+# -*- coding: utf-8 -*-
+# author: a2htray
+# description: matrix factors of the numerial operation
+
+from eas.factor import Factor
 from eas import helper
 import numpy as np
 
-# 矩阵因子
-# 实则产生一个对角方阵
-# 对角线上的元素为实际的因子值
 class MatrixFactor(Factor):
+    '''matrix factor
+    virtually, the output is a diagonal martix
+    '''
     def __init__(self, gen, gen_func, N):
         Factor.__init__(self, gen, gen_func)
         self.N = N
+    
+    @staticmethod
+    def is_matrix_factor(obj):
+        return isinstance(obj, MatrixFactor)
 
 def create_matrix_factor(gen, gen_func, N):
     return MatrixFactor(gen, gen_func, N)
 
 class ConstantMatrixFactor(MatrixFactor):
+    '''constant martix factor
+    '''
     def __init__(self, c, gen, N):
+        '''
+        :param c: a constant value
+        :param gen: total number of iterations
+        :param N: number of dimenssion
+        '''
         MatrixFactor.__init__(self, gen, self.constant, N)
         self.c = c
     
@@ -22,7 +37,15 @@ class ConstantMatrixFactor(MatrixFactor):
         return np.diag(np.array([self.c] * self.N))
 
 class RandomMatrixFactor(MatrixFactor):
+    '''constant martix factor
+    '''
     def __init__(self, l, gen, N, has_direct=False):
+        '''
+        :param l: the boundaries, iterable object, its size is 2
+        :param gen: total number of iterations
+        :param N: number of dimenssion
+        :param has_direct: the flag indicating whether the output has a direct coefficient
+        '''
         MatrixFactor.__init__(self, gen, self.random, N)
         self.l = l
         self.has_direct = has_direct

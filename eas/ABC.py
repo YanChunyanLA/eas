@@ -1,5 +1,5 @@
 from .base import BaseEA
-from eas import Solution
+from eas import Solution, helper
 import numpy as np
 import random
 
@@ -33,13 +33,13 @@ class ABC(BaseEA):
 
     def employee_stage(self):
         r_factor = self.factors['r1'].next()
+        is_martirx_factor = BaseEA.is_matrix_factor(self.factors['r1'])
+
         for i in range(self.NP):
             selected_index = self.strategies['selection'](0, self.NP, size=1, excludes=[i])
             selected_solution = self.solutions[selected_index]
-
             trial_solution = Solution(np.zeros(self.N))
-
-            trial_solution.vector = self.solutions[i].vector + np.matmul(r_factor, selected_solution.vector)
+            trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_martirx_factor, r_factor, selected_solution.vector)
             trial_solution.amend_vector(self.U, self.L)
             target_fitness = self.solutions[i].apply_fitness_func(self.fitness_func)
             trial_fitness = trial_solution.apply_fitness_func(self.fitness_func)
@@ -56,16 +56,20 @@ class ABC(BaseEA):
         probabilities = fitness_list / fitness_sum
         r_factor = self.factors['r2'].next()
 
+        is_martirx_factor = BaseEA.is_matrix_factor(self.factors['r2'])
+
         for i in range(self.NP):
+            # protect the original probabilities
             temp_probabilities = probabilities.copy()
             temp_probabilities[i] = 0
+
             selected_index = random.choices(list(range(self.NP)), temp_probabilities)[0]
             selected_solution = self.solutions[selected_index]
 
             trial_solution = Solution(np.zeros(self.N))
-
-            trial_solution.vector = self.solutions[i].vector + np.matmul(r_factor, selected_solution.vector)
+            trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_martirx_factor, r_factor, selected_solution.vector)
             trial_solution.amend_vector(self.U, self.L)
+            
             target_fitness = self.solutions[i].apply_fitness_func(self.fitness_func)
             trial_fitness = trial_solution.apply_fitness_func(self.fitness_func)
             

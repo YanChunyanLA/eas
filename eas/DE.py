@@ -31,6 +31,8 @@ class DE(BaseEA):
         self.selection_n = n
 
     def fit(self, gen):
+        f_is_matrix_factor = BaseEA.is_matrix_factor(self.factors['f'])
+
         for i in range(gen):
             self.append_best_fitness()
 
@@ -55,7 +57,7 @@ class DE(BaseEA):
                     if random.random() < facotrs['cr'] or k == self.N -1:
                         # 计算分量的差
                         difference = self.compute_difference(k, self.solutions, indexes)
-                        trial_solution.vector[k] = base_solution.vector[k] + facotrs['f'] * difference
+                        trial_solution.vector[k] = base_solution.vector[k] + helper.factor_multiply(f_is_matrix_factor, facotrs['f'], difference)
                     else:
                         trial_solution.vector[k] = self.solutions[j].vector[k]
 

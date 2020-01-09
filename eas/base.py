@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import eas
+from eas.factor import MatrixFactor
 
 class Solution(object):
     def __init__(self, vector):
@@ -105,6 +106,18 @@ class BaseEA(object):
         if self.log_file == None:
             raise ValueError('need to set log file, if you want to use log activities')
         np.savetxt(self.log_file, np.append(best_vector, [fitness], axis=0)[np.newaxis], delimiter=',')
+
+    @staticmethod
+    def is_matrix_factor(factor):
+        return MatrixFactor.is_matrix_factor(factor)
+
+    # @staticmethod
+    # def factor_multiply(is_matrix_factor, factor, v):
+    #     print(is_matrix_factor)
+    #     if is_matrix_factor:
+    #         return np.matmul(factor, v)
+    #     else:
+    #         return factor * v
 
     def __del__(self):
         try:
