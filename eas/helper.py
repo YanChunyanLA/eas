@@ -10,6 +10,12 @@ def factor_multiply(is_matrix_factor, factor, v):
     if is_matrix_factor:
         return np.matmul(factor, v)
     else:
-        return factor * v 
+        return factor * v
+
+def multiply(xs):
+    if len(xs) == 0:
+        return 1
+    
+    return xs[0] * multiply(xs[1:])
 
     

@@ -1,5 +1,4 @@
-from .base import BaseEA
-from eas import Solution, helper, TrialSolution
+from eas import helper, TrialSolution, BaseEA
 import numpy as np
 import random
 
@@ -26,6 +25,7 @@ class ABC(BaseEA):
     def fit(self, gen):
         for _ in range(gen):
             self.append_best_fitness()
+
             self.employee_stage()
             self.outlooker_stage()
             self.scouter_stage()
@@ -65,7 +65,7 @@ class ABC(BaseEA):
             selected_index = random.choices(list(range(self.NP)), temp_probabilities)[0]
             selected_solution = self.solutions[selected_index]
 
-            trial_solution = BaseEA.__SOLUTION_CLASS__(np.zeros(self.N))
+            trial_solution = BaseEA.__SOLUTION_CLASS__.zeros(self.N)
             trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_martirx_factor, r_factor, selected_solution.vector)
             trial_solution.amend_vector(self.U, self.L)
 

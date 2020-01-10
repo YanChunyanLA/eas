@@ -1,5 +1,4 @@
-from .base import BaseEA
-# from eas import TrialSolution
+from eas import BaseEA
 
 # paper
 # Ye, Zhiwei, Lie Ma, and Hongwei Chen. "A hybrid rice optimization algorithm.
@@ -9,9 +8,10 @@ class HRO(BaseEA):
     def __init__(self, NP, N, U, L, factors):
         BaseEA.__init__(self, NP, N, U, L, factors)
         BaseEA.check_factors(self)
-        # self.TRIAL_LIMIT = TRIAL
+
         if self.NP % 3 != 0:
             raise ValueError('in HRO, NP must be divisible by 3')
+
         self.GROUP_SIZE = int(self.NP / 3)
 
     def get_factor_keys(self):
@@ -26,6 +26,7 @@ class HRO(BaseEA):
             # sort
             # maintainer restorer sterile
             self.solutions.sort(key=lambda s: s.apply_fitness_func(self.fitness_func))
+
             if not self.is_minimal:
                 self.solutions.reverse()
 

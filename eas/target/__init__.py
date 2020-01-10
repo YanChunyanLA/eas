@@ -1,0 +1,1 @@
+from .functions import bent_cigar, discus, weierstrass, rosenbrock, griewank
