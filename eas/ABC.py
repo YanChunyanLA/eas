@@ -13,7 +13,7 @@ class ABC(BaseEA):
     def get_factor_keys(self):
         return [
             'r1',
-            'r2'
+            'r2',
         ]
 
     def trial_increase(self, i):
@@ -38,7 +38,7 @@ class ABC(BaseEA):
         for i in range(self.NP):
             selected_index = self.strategies['selection'](0, self.NP, size=1, excludes=[i])
             selected_solution = self.solutions[selected_index]
-            trial_solution = Solution(np.zeros(self.N))
+            trial_solution = Solution.zeros(self.N)
             trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_martirx_factor, r_factor, selected_solution.vector)
             trial_solution.amend_vector(self.U, self.L)
             target_fitness = self.solutions[i].apply_fitness_func(self.fitness_func)
@@ -69,7 +69,7 @@ class ABC(BaseEA):
             trial_solution = Solution(np.zeros(self.N))
             trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_martirx_factor, r_factor, selected_solution.vector)
             trial_solution.amend_vector(self.U, self.L)
-            
+
             target_fitness = self.solutions[i].apply_fitness_func(self.fitness_func)
             trial_fitness = trial_solution.apply_fitness_func(self.fitness_func)
             

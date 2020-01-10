@@ -7,12 +7,30 @@ class Solution(object):
     def __init__(self, vector):
         self.vector = vector
         self.N = len(self.vector)
+        self.trial = 0
+        self.TRIAL_LIMIT = 0
+
+    def set_trial_limit(self, TRIAL):
+        self.TRIAL_LIMIT = TRIAL
+
+    def trial_increase(self):
+        self.trial += 1
+    
+    def trial_zero(self):
+        self.trial = 0
+
+    def is_exceed_trial(self):
+        return self.trial >= self.TRIAL_LIMIT
 
     @staticmethod
     def create(N, U, L):
         random_diag = np.diag(np.random.uniform(0, 1, N))
         vector = L + np.matmul(random_diag, U - L)
         return Solution(vector)
+
+    @staticmethod
+    def zeros(N):
+        return Solution(np.zeros(N))
     
     def apply_fitness_func(self, fitness_func):
         return fitness_func(self.vector)
