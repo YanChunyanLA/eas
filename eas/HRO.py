@@ -1,17 +1,18 @@
 from .base import BaseEA
-from eas import Solution
+# from eas import TrialSolution
 
+# paper
+# Ye, Zhiwei, Lie Ma, and Hongwei Chen. "A hybrid rice optimization algorithm.
+# " 2016 11th International Conference on Computer Science & Education (ICCSE). 
+# IEEE, 2016.
 class HRO(BaseEA):
-    def __init__(self, NP, N, U, L, TRIAL, factors):
+    def __init__(self, NP, N, U, L, factors):
         BaseEA.__init__(self, NP, N, U, L, factors)
         BaseEA.check_factors(self)
-        self.TRIAL_LIMIT = TRIAL
+        # self.TRIAL_LIMIT = TRIAL
         if self.NP % 3 != 0:
             raise ValueError('in HRO, NP must be divisible by 3')
         self.GROUP_SIZE = int(self.NP / 3)
-
-        for i in range(self.NP):
-            self.solutions[i].set_trial_limit(self.TRIAL_LIMIT)
 
     def get_factor_keys(self):
         return [
@@ -33,9 +34,6 @@ class HRO(BaseEA):
             self.hybridization_stage()
             self.selfing_stage()
             self.renewal_stage()
-        for i in range(self.NP):
-
-            print(self.solutions[i].apply_fitness_func(self.fitness_func))
 
     def hybridization_stage(self):
         factors = {
@@ -46,7 +44,7 @@ class HRO(BaseEA):
             sterile_index = self.strategies['selection'](2 * self.GROUP_SIZE, self.NP, size=1, excludes=[i])
             maintainer_index = self.strategies['selection'](0, self.GROUP_SIZE, size=1)
 
-            trial_solution = Solution.zeros(self.N)
+            trial_solution = BaseEA.__SOLUTION_CLASS__.zeros(self.N)
             trial_solution.vector = (factors['r1'] * self.solutions[sterile_index].vector + factors['r2'] * self.solutions[maintainer_index].vector) / (factors['r1'] + factors['r2'])
 
             trial_solution.amend_vector(self.U, self.L)
@@ -63,7 +61,7 @@ class HRO(BaseEA):
         for i in range(self.GROUP_SIZE, 2 * self.GROUP_SIZE):
             restorer_index = self.strategies['selection'](self.GROUP_SIZE, 2 * self.GROUP_SIZE, size=1, excludes=[i])
             
-            trial_solution = Solution.zeros(self.N)
+            trial_solution = BaseEA.__SOLUTION_CLASS__.zeros(self.N)
             trial_solution.vector = factor * (self.solutions[0].vector - self.solutions[restorer_index].vector) + self.solutions[i].vector
 
             trial_solution.amend_vector(self.U, self.L)
@@ -77,4 +75,3 @@ class HRO(BaseEA):
         for i in range(self.GROUP_SIZE, 2 * self.GROUP_SIZE):
             if self.solutions[i].is_exceed_trial():
                 self.solutions[i] = Solution.create(self.N, self.U, self.L)
-                self.solutions[i].set_trial_limit(self.TRIAL_LIMIT)

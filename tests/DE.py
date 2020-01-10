@@ -44,3 +44,4 @@ plt.scatter(np.arange(1, GEN + 1), [math.log(v) for v in de.history_best_fitness
 plt.xlabel('Gen')
 plt.ylabel('log(f(x))')
 plt.savefig('./storages/graphs/DE-target-function-01-cr0.3-f0.5-%s.png' % time_str)
+plt.show()

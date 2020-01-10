@@ -1,4 +1,5 @@
-from .base import Solution
+from .base import BaseEA
+from .solution import Solution, TrialSolution
 from .flag import log_flag, boundary_strategy_flag
 from .DE import DE
 from .ABC import ABC

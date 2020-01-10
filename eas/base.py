@@ -2,64 +2,11 @@ import numpy as np
 import random
 import eas
 from eas.factor import MatrixFactor
-
-class Solution(object):
-    def __init__(self, vector):
-        self.vector = vector
-        self.N = len(self.vector)
-        self.trial = 0
-        self.TRIAL_LIMIT = 0
-
-    def set_trial_limit(self, TRIAL):
-        self.TRIAL_LIMIT = TRIAL
-
-    def trial_increase(self):
-        self.trial += 1
-    
-    def trial_zero(self):
-        self.trial = 0
-
-    def is_exceed_trial(self):
-        return self.trial >= self.TRIAL_LIMIT
-
-    @staticmethod
-    def create(N, U, L):
-        random_diag = np.diag(np.random.uniform(0, 1, N))
-        vector = L + np.matmul(random_diag, U - L)
-        return Solution(vector)
-
-    @staticmethod
-    def zeros(N):
-        return Solution(np.zeros(N))
-    
-    def apply_fitness_func(self, fitness_func):
-        return fitness_func(self.vector)
-
-    def change_vector(self, vector):
-        self.vector = vector
-
-    def amend_vector(self, U, L):
-        func = getattr(self, '_use_' + eas.boundary_strategy_flag)
-        func(U, L)
-
-    def _use_boundary(self, U, L):
-        for i in range(self.N):
-            if self.vector[i] > U[i]:
-                self.vector[i] = U[i]
-            if self.vector[i] < L[i]:
-                self.vector[i] = L[i]
-
-    def _use_middle(self, U, L):
-        for i in range(self.N):
-            if self.vector[i] > U[i] or self.vector[i] < L[i]:
-                self.vector[i] = (U[i] + L[i]) / 2.0
-    
-    def _use_random(self, U, L):
-        for i in range(self.N):
-            if self.vector[i] > U[i] or self.vector[i] < L[i]:
-                self.vector[i] = L[i] + random.random() * (U[i] - L[i])
+from .solution import Solution
 
 class BaseEA(object):
+    __SOLUTION_CLASS__ = Solution # default solution derived from Solution
+
     def __init__(self, NP, N, U, L, factors):
         self.NP = NP # 种群个体数量
         self.N = N # 个体维数
@@ -68,7 +15,7 @@ class BaseEA(object):
         self.factors = factors
         self.is_minimal = True
         self.fitness_func = None
-        self.solutions = [Solution.create(self.N, self.U, self.L) for _ in range(self.NP)]
+        self.solutions = [BaseEA.__SOLUTION_CLASS__.create(self.N, self.U, self.L) for _ in range(self.NP)]
         self.strategies = {}
         self.history_best_fitness = [] # 第一代中最优的适应值
         self.log_file = None
@@ -128,14 +75,6 @@ class BaseEA(object):
     @staticmethod
     def is_matrix_factor(factor):
         return MatrixFactor.is_matrix_factor(factor)
-
-    # @staticmethod
-    # def factor_multiply(is_matrix_factor, factor, v):
-    #     print(is_matrix_factor)
-    #     if is_matrix_factor:
-    #         return np.matmul(factor, v)
-    #     else:
-    #         return factor * v
 
     def __del__(self):
         try:

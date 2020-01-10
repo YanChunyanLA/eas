@@ -1,7 +1,7 @@
 import eas
 import time
 import numpy as np
-from eas import HRO, selection
+from eas import HRO, selection, TrialSolution, BaseEA
 from eas.factor import RandomFactor
 import matplotlib.pyplot as plt
 import math
@@ -28,7 +28,10 @@ factors = {
     'r3': RandomFactor([0.0, 1.0], GEN, N),
 }
 
-hro = HRO(NP, N, U, L, TRIAL, factors)
+BaseEA.__SOLUTION_CLASS__ = TrialSolution
+TrialSolution.TRIAL_LIMIT = TRIAL
+
+hro = HRO(NP, N, U, L, factors)
 hro.register_strategy('selection', selection.random)
 hro.set_log_file(log_file)
 
@@ -37,15 +40,11 @@ def func01(xs):
     return xs[0]**2 + 10**6 * sum([x**2 for x in xs[1:]])
 
 hro.set_fitness_func(func01)
-
 hro.fit(GEN)
-
-# a = [1, 2, 5, 3]
-# a.sort()
-# print(a)
 
 # 画图操作
 plt.scatter(np.arange(1, GEN + 1), [math.log(v) for v in hro.history_best_fitness])
 plt.xlabel('Gen')
 plt.ylabel('log(f(x))')
 plt.savefig('./storages/graphs/HRO-target-function-01-r1[-1--1]-r2[-1--1]-r3[0--1]-%s.png' % time_str)
+plt.show()

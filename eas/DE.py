@@ -5,8 +5,9 @@ import eas
 import random
 
 # paper
-# Price, Kenneth V. "Differential evolution: a fast and simple numerical optimizer.
-# " Proceedings of North American Fuzzy Information Processing. IEEE, 1996.
+# Price, Kenneth V. "Differential evolution: a fast and simple numerical 
+# optimizer. " Proceedings of North American Fuzzy Information Processing. 
+# IEEE, 1996.
 class DE(BaseEA):
     def __init__(self, NP, N, U, L, factors):
         BaseEA.__init__(self, NP, N, U, L, factors)
@@ -51,12 +52,12 @@ class DE(BaseEA):
                 # len_of_indexes = len(indexes)
 
                 # 用于保存生成的测试向量
-                trial_solution = Solution(np.zeros(self.N))
+                trial_solution = BaseEA.__SOLUTION_CLASS__.zeros(self.N)
 
                 for k in range(self.N):
                     if random.random() < facotrs['cr'] or k == self.N -1:
                         # 计算分量的差
-                        difference = self.compute_difference(k, self.solutions, indexes)
+                        difference = self.compute_difference(k, indexes)
                         trial_solution.vector[k] = base_solution.vector[k] + helper.factor_multiply(f_is_matrix_factor, facotrs['f'], difference)
                     else:
                         trial_solution.vector[k] = self.solutions[j].vector[k]
@@ -68,10 +69,11 @@ class DE(BaseEA):
                 if (self.is_minimal and trial_fitness < target_fitness) or (not self.is_minimal and trial_fitness > target_fitness):
                     self.solutions[j] = trial_solution
 
-    def compute_difference(self, target_vector_index, solutions, indexes):
+    def compute_difference(self, target_vector_index, indexes):
         difference = 0.0
         for i in range(0, len(indexes), 2):
             difference += helper.difference(
                 self.solutions[indexes[i]].vector[target_vector_index],
                 self.solutions[indexes[i + 1]].vector[target_vector_index])
+
         return difference
