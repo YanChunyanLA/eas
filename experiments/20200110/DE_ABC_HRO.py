@@ -20,7 +20,7 @@ U = np.array([100] * N)
 L = np.array([-100] * N)
 GEN = 3000
 
-##### DE
+################ DE
 de = DE(NP, N, U, L, {
     'cr': ConstantFactor(0.3, GEN),
     'f': ExpFactor([0, 0.5], GEN),
@@ -34,7 +34,7 @@ de.fit(GEN)
 # plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in de.history_best_fitness])
 plt.plot(np.arange(1, GEN + 1), de.history_best_fitness)
 
-##### ABC
+################ ABC
 TRIAL = 8
 
 BaseEA.__SOLUTION_CLASS__ = TrialSolution
@@ -52,7 +52,7 @@ abc.fit(GEN)
 # plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in abc.history_best_fitness])
 plt.plot(np.arange(1, GEN + 1), abc.history_best_fitness)
 
-### HRO
+################ HRO
 TRIAL = 8
 
 BaseEA.__SOLUTION_CLASS__ = TrialSolution

@@ -18,4 +18,9 @@ def multiply(xs):
     
     return xs[0] * multiply(xs[1:])
 
+def init_vector(N, U, L):
+    random_diag = np.diag(np.random.uniform(0, 1, N))
+    vector = L + np.matmul(random_diag, U - L)
+    return vector
+
     
