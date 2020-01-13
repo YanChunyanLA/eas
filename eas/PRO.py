@@ -25,13 +25,12 @@ class PRO(BaseEA):
         if not self.is_minimal:
             self.solutions.reverse()
 
-        # self.append_best_fitness()
-
         factors = self.get_factors()
 
         for i in range(self.LABLE_SIZE):
             for j in range(self.GROUP_SIZE):
-                index = i * self.LABLE_SIZE + j
+                index = i * self.GROUP_SIZE + j
+
                 self.solutions[index].add_label(i)
 
                 if self.solutions[index].should_be_fired():
@@ -48,7 +47,7 @@ class PRO(BaseEA):
     def learn_stage(self, gen):
         for i in range(self.LABLE_SIZE):
             for j in range(self.GROUP_SIZE):
-                index = i * self.LABLE_SIZE + j
+                index = i * self.GROUP_SIZE + j
                 s1 = None
                 s2 = None
 

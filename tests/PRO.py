@@ -23,7 +23,7 @@ N = 4
 U = np.array([100] * N)
 L = np.array([-100] * N)
 GEN = 3000
-NC = 3
+NC = 8
 
 factors = {
     'r1': RandomFactor([-1.0, 1.0], GEN, N),
