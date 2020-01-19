@@ -43,7 +43,7 @@ hro.set_fitness_func(func01)
 hro.fit(GEN)
 
 # 画图操作
-plt.scatter(np.arange(1, GEN + 1), [math.log(v) for v in hro.history_best_fitness])
+plt.scatter(np.arange(1, GEN + 1), [math.log(v) for v in hro.best_fitness_store])
 plt.xlabel('Gen')
 plt.ylabel('log(f(x))')
 plt.savefig('./storages/graphs/HRO-target-function-01-r1[-1--1]-r2[-1--1]-r3[0--1]-%s.png' % time_str)

@@ -1,5 +1,5 @@
 from .base import BaseEA
 
 class GA(BaseEA):
-    def __init__(self, NP, N, U, L, factors):
-        BaseEA.__init__(self, NP, N, U, L, factors)
+    def __init__(self, _np, n, upperxs, lowerxs, factors):
+        BaseEA.__init__(self, _np, n, upperxs, lowerxs, factors)

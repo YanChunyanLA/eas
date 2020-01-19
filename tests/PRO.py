@@ -39,10 +39,10 @@ pro.register_strategy('selection', selection.random)
 pro.set_fitness_func(bent_cigar)
 
 pro.fit(GEN)
-print(len(pro.history_best_fitness))
+print(len(pro.best_fitness_store))
 
 # 画图操作
-plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in pro.history_best_fitness])
+plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in pro.best_fitness_store])
 plt.xlabel('Gen')
 plt.ylabel('log(f(x))')
 plt.savefig('./storages/graphs/PRO-target-function-01-r1[-1--1]-r2[-1--1]-%s.png' % time_str)

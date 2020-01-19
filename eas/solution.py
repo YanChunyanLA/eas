@@ -1,7 +1,21 @@
 import numpy as np
-import eas
 from eas import helper
+from eas.boundary import Boundary
 import random, math
+
+
+class SolutionFactory(object):
+    def __init__(self, n, upperxs, lowerxs, **kwargs):
+        self.n = n
+        self.upperxs = upperxs
+        self.lowerxs = lowerxs
+        self.kwargs = kwargs
+
+    def create(self, class_str, all_zero=False):
+        if class_str == 'TrialSolution':
+            vector = np.zeros(self.n) if all_zero else helper.init_vector(self.n, self.upperxs, self.lowerxs)
+            return TrialSolution(vector)
+
 
 class Solution(object):
     def __init__(self, vector):
@@ -10,12 +24,12 @@ class Solution(object):
         self.mean_vector = self.vector
 
     @staticmethod
-    def create(N, U, L):
-        return Solution(helper.init_vector(N, U, L))
+    def create(n, upperxs, lowerxs):
+        return Solution(helper.init_vector(n, upperxs, lowerxs))
 
     @staticmethod
-    def zeros(N):
-        return Solution(np.zeros(N))
+    def zeros(n):
+        return Solution(np.zeros(n))
     
     def apply_fitness_func(self, fitness_func):
         return fitness_func(self.vector)
@@ -23,29 +37,12 @@ class Solution(object):
     def change_vector(self, vector, mean=False, gen=2):
         self.vector = vector
 
-        if mean == True:
+        if mean:
             self.mean_vector = (self.mean_vector * gen + self.vector) / (gen + 1)
 
-    def amend_vector(self, U, L):
-        func = getattr(self, '_use_' + eas.boundary_strategy_flag)
-        func(U, L)
+    def amend_vector(self, upperxs, lowerxs, boundary_strategy=Boundary.BOUNDARY):
+        self.vector = Boundary.make_strategy(boundary_strategy)(self.vector, upperxs, lowerxs)
 
-    def _use_boundary(self, U, L):
-        for i in range(self.N):
-            if self.vector[i] > U[i]:
-                self.vector[i] = U[i]
-            if self.vector[i] < L[i]:
-                self.vector[i] = L[i]
-
-    def _use_middle(self, U, L):
-        for i in range(self.N):
-            if self.vector[i] > U[i] or self.vector[i] < L[i]:
-                self.vector[i] = (U[i] + L[i]) / 2.0
-    
-    def _use_random(self, U, L):
-        for i in range(self.N):
-            if self.vector[i] > U[i] or self.vector[i] < L[i]:
-                self.vector[i] = L[i] + random.random() * (U[i] - L[i])
 
 class TrialSolution(Solution):
     TRIAL_LIMIT = 8
@@ -64,12 +61,13 @@ class TrialSolution(Solution):
         return self.trial >= TrialSolution.TRIAL_LIMIT
 
     @staticmethod
-    def create(N, U, L):
-        return TrialSolution(helper.init_vector(N, U, L))
+    def create(n, upperxs, lowerxs):
+        return TrialSolution(helper.init_vector(n, upperxs, lowerxs))
 
     @staticmethod
-    def zeros(N):
-        return TrialSolution(np.zeros(N))
+    def zeros(n):
+        return TrialSolution(np.zeros(n))
+
 
 class LabelSolution(Solution):
     LABEL_SIZE = 8
@@ -82,32 +80,32 @@ class LabelSolution(Solution):
         self.seed = random.choice(list(range(1, LabelSolution.LABEL_SIZE)))
 
     def get_current_label(self):
-        '''at each iteration, instances of Label should invoke this method to 
+        """at each iteration, instances of Label should invoke this method to 
         get the current label it got
-        '''
+        """
         return self.labels[LabelSolution.LABEL_SIZE - 1]
     
     def add_label(self, label):
-        '''give a label to a solution
-        '''
+        """give a label to a solution
+        """
         self.labels.append(label)
         if len(self.labels) >= LabelSolution.LABEL_SIZE:
             self.labels = self.labels[1:]
 
     def should_be_fired(self):
-        '''check whether the solution should be fired
-        '''
+        """check whether the solution should be fired
+        """
         return len([label for label in self.labels if label == LabelSolution.LABEL_SIZE - 1]) == LabelSolution.LABEL_SIZE
 
     def get_learn_rate(self, gen):
         return self.learn_rate * (self.seed - math.exp(gen / LabelSolution.GEN * math.log(self.seed)))
 
     @staticmethod
-    def create(N, U, L):
-        return LabelSolution(helper.init_vector(N, U, L))
+    def create(n, upperxs, lowerxs):
+        return LabelSolution(helper.init_vector(n, upperxs, lowerxs))
 
     @staticmethod
-    def zeros(N):
-        return LabelSolution(np.zeros(N))
+    def zeros(n):
+        return LabelSolution(np.zeros(n))
 
     

@@ -33,7 +33,7 @@ de.register_strategy('selection_base', selection.best)
 
 de.fit(GEN)
 
-ax.plot(np.arange(1, GEN + 1), [math.log(v) for v in de.history_best_fitness], label='DE')
+ax.plot(np.arange(1, GEN + 1), [math.log(v) for v in de.best_fitness_store], label='DE')
 # ax.plot(np.arange(1, GEN + 1), de.history_best_fitness, label='DE')
 
 ################ ABC
@@ -51,7 +51,7 @@ abc.register_strategy('selection', selection.random)
 
 abc.fit(GEN)
 
-ax.plot(np.arange(1, GEN + 1), [math.log(v) for v in abc.history_best_fitness], label='ABC')
+ax.plot(np.arange(1, GEN + 1), [math.log(v) for v in abc.best_fitness_store], label='ABC')
 # ax.plot(np.arange(1, GEN + 1), abc.history_best_fitness, label='ABC')
 
 ################ HRO
@@ -70,7 +70,7 @@ hro.register_strategy('selection', selection.random)
 
 hro.fit(GEN)
 
-ax.plot(np.arange(1, GEN + 1), [math.log(v) for v in hro.history_best_fitness], label='HRO')
+ax.plot(np.arange(1, GEN + 1), [math.log(v) for v in hro.best_fitness_store], label='HRO')
 # ax.plot(np.arange(1, GEN + 1), hro.history_best_fitness, label='HRO')
 
 ################ PRO
@@ -90,7 +90,7 @@ pro.register_strategy('selection', selection.random)
 pro.fit(GEN)
 
 # 画图操作
-ax.plot(np.arange(1, GEN + 1), [math.log(v) for v in pro.history_best_fitness], label='PRO')
+ax.plot(np.arange(1, GEN + 1), [math.log(v) for v in pro.best_fitness_store], label='PRO')
 # ax.plot(np.arange(1, GEN + 1), pro.history_best_fitness, label='PRO')
 
 ##### at last
