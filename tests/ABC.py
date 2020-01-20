@@ -30,7 +30,7 @@ factors = {
 TrialSolution.TRIAL_LIMIT = TRIAL
 
 abc = ABC(NP, N, U, L, factors,
-          optimal_minimal=True,
+          optimal_minimal=False,
           fitness_func=target.bent_cigar,
           boundary_strategy=Boundary.BOUNDARY,
           solution_class='TrialSolution')
@@ -42,7 +42,7 @@ abc.fit(GEN)
 # print(abc.history_best_fitness)
 
 # 画图操作
-plt.scatter(np.arange(1, GEN + 1), [math.log(v) for v in abc.best_fitness_store])
+plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in abc.best_fitness_store])
 plt.xlabel('Gen')
 plt.ylabel('log(f(x))')
 plt.savefig('./storages/graphs/ABC-target-function-01-r1[-1--1]-r2[-1--1]-%s.png' % time_str)

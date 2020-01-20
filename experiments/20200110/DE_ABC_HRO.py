@@ -31,7 +31,7 @@ de.register_strategy('selection_base', selection.best)
 
 de.fit(GEN)
 
-# plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in de.history_best_fitness])
+# plt.plot(np.arange(1, gen + 1), [math.log(v) for v in de.history_best_fitness])
 plt.plot(np.arange(1, GEN + 1), de.best_fitness_store)
 
 ################ ABC
@@ -49,7 +49,7 @@ abc.register_strategy('selection', selection.random)
 
 abc.fit(GEN)
 
-# plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in abc.history_best_fitness])
+# plt.plot(np.arange(1, gen + 1), [math.log(v) for v in abc.history_best_fitness])
 plt.plot(np.arange(1, GEN + 1), abc.best_fitness_store)
 
 ################ HRO
@@ -68,7 +68,7 @@ hro.set_fitness_func(fitness_func)
 
 hro.fit(GEN)
 
-# plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in hro.history_best_fitness])
+# plt.plot(np.arange(1, gen + 1), [math.log(v) for v in hro.history_best_fitness])
 plt.plot(np.arange(1, GEN + 1), hro.best_fitness_store)
 
 ##### at last

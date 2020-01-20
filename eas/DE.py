@@ -44,7 +44,7 @@ class DE(BaseEA):
             base_solution = self.solutions[base_index]
 
             # 每一次迭代都需要重新生成一次因子
-            facotrs = self.get_factors()
+            factors = self.get_factors()
 
             for j in range(self.np):
                 # 选择用于 crossover 的解向量的下标集合
@@ -52,24 +52,25 @@ class DE(BaseEA):
                 # len_of_indexes = len(indexes)
 
                 # 用于保存生成的测试向量
-                trial_solution = self.solution_factory.create(self.solution_class, all_zero=True)
+                trial_solution = self.create_solution(all_zero=True)
 
                 for k in range(self.n):
-                    if random.random() < facotrs['cr'] or k == self.n -1:
+                    if random.random() < factors['cr'] or k == self.n -1:
                         # 计算分量的差
                         difference = self.compute_difference(k, indexes)
-                        trial_solution.vector[k] = base_solution.vector[k] + helper.factor_multiply(f_is_matrix_factor, facotrs['f'], difference)
+                        trial_solution.vector[k] = base_solution.vector[k] + \
+                                                   helper.factor_multiply(f_is_matrix_factor, factors['f'], difference)
                     else:
                         trial_solution.vector[k] = self.solutions[j].vector[k]
 
                 trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
                 self.solutions[j], _ = self.compare(self.solutions[j], trial_solution)
 
-    def compute_difference(self, target_vector_index, indexes):
+    def compute_difference(self, target_index, indexes):
         difference = 0.0
         for i in range(0, len(indexes), 2):
             difference += helper.difference(
-                self.solutions[indexes[i]].vector[target_vector_index],
-                self.solutions[indexes[i + 1]].vector[target_vector_index])
+                self.solutions[indexes[i]].vector[target_index],
+                self.solutions[indexes[i + 1]].vector[target_index])
 
         return difference
