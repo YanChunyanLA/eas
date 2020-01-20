@@ -1,5 +1,5 @@
-import numpy as np
 import random as rd
+
 
 def random(start, end, size=2, excludes=None):
     l = list(range(start, end))

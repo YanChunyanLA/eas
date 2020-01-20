@@ -1,22 +1,19 @@
 import eas
 import time
 import numpy as np
-from eas import PRO, selection, LabelSolution, BaseEA
+from eas import PRO, selection, LabelSolution, BaseEA, target
 from eas.factor import RandomFactor
-from eas.target import bent_cigar
+from eas.boundary import Boundary
 import matplotlib.pyplot as plt
 import math
 
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 
 # eas.log_flag = True
-eas.boundary_strategy_flag = 'boundary'
 
 log_file = open(
     './storages/logs/PRO-target-function-01-%s.tsv' % time_str,
     mode='ab')
-
-
 
 NP = 60
 N = 4
@@ -30,13 +27,16 @@ factors = {
     'r2': RandomFactor([-1.0, 1.0], GEN, N),
 }
 
-BaseEA.__SOLUTION_CLASS__ = LabelSolution
 LabelSolution.LABEL_SIZE = NC
 LabelSolution.GEN = GEN
 
-pro = PRO(NP, N, U, L, NC, factors)
+pro = PRO(NP, N, U, L, NC, factors,
+          optimal_minimal=True,
+          fitness_func=target.bent_cigar,
+          boundary_strategy=Boundary.BOUNDARY,
+          solution_class='LabelSolution')
+
 pro.register_strategy('selection', selection.random)
-pro.set_fitness_func(bent_cigar)
 
 pro.fit(GEN)
 print(len(pro.best_fitness_store))

@@ -12,16 +12,22 @@ class SolutionFactory(object):
         self.kwargs = kwargs
 
     def create(self, class_str, all_zero=False):
+        vector = np.zeros(self.n) if all_zero else helper.init_vector(self.n, self.upperxs, self.lowerxs)
+        _class = Solution
         if class_str == 'TrialSolution':
-            vector = np.zeros(self.n) if all_zero else helper.init_vector(self.n, self.upperxs, self.lowerxs)
-            return TrialSolution(vector)
+            _class = TrialSolution
+        if class_str == 'LabelSolution':
+            _class = LabelSolution
+
+        return _class(vector)
 
 
 class Solution(object):
     def __init__(self, vector):
         self.vector = vector
-        self.N = len(self.vector)
+        self.n = len(self.vector)
         self.mean_vector = self.vector
+        self.fitness = None
 
     @staticmethod
     def create(n, upperxs, lowerxs):
@@ -32,7 +38,8 @@ class Solution(object):
         return Solution(np.zeros(n))
     
     def apply_fitness_func(self, fitness_func):
-        return fitness_func(self.vector)
+        self.fitness = fitness_func(self.vector)
+        return self.fitness
 
     def change_vector(self, vector, mean=False, gen=2):
         self.vector = vector
@@ -59,14 +66,6 @@ class TrialSolution(Solution):
 
     def is_exceed_trial(self):
         return self.trial >= TrialSolution.TRIAL_LIMIT
-
-    @staticmethod
-    def create(n, upperxs, lowerxs):
-        return TrialSolution(helper.init_vector(n, upperxs, lowerxs))
-
-    @staticmethod
-    def zeros(n):
-        return TrialSolution(np.zeros(n))
 
 
 class LabelSolution(Solution):
@@ -99,13 +98,3 @@ class LabelSolution(Solution):
 
     def get_learn_rate(self, gen):
         return self.learn_rate * (self.seed - math.exp(gen / LabelSolution.GEN * math.log(self.seed)))
-
-    @staticmethod
-    def create(n, upperxs, lowerxs):
-        return LabelSolution(helper.init_vector(n, upperxs, lowerxs))
-
-    @staticmethod
-    def zeros(n):
-        return LabelSolution(np.zeros(n))
-
-    

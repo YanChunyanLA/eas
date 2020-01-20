@@ -1,6 +1,6 @@
 import eas
 from eas import ABC, selection, TrialSolution, target
-from eas.factor import ConstantMatrixFactor, RandomMatrixFactor
+from eas.factor import RandomMatrixFactor
 from eas.boundary import Boundary
 import numpy as np
 import matplotlib.pyplot as plt

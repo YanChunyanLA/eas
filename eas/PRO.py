@@ -38,7 +38,7 @@ class PRO(BaseEA):
                     s_index = self.strategies['selection'](0, self.GROUP_SIZE, size=1, excludes=[index])
                     a_index = self.strategies['selection'](self.GROUP_SIZE, self.GROUP_SIZE * 2, size=1, excludes=[index])
 
-                    new_solution = BaseEA.__SOLUTION_CLASS__.zeros(self.n)
+                    new_solution = self.solution_factory.create(self.solution_class, all_zero=True)
                     new_solution.vector = (factors['r1'] * self.solutions[s_index].vector + factors['r2'] * self.solutions[a_index].vector) / (factors['r1'] + factors['r2'])
                     new_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
                     new_solution.change_vector(new_solution.vector, mean=True, gen=gen)
@@ -57,16 +57,12 @@ class PRO(BaseEA):
                 else:
                     s1, s2 = self.strategies['selection'](self.GROUP_SIZE * i, self.GROUP_SIZE * (i + 1), size=2, excludes=[index])
                 
-                trial_solution = BaseEA.__SOLUTION_CLASS__.zeros(self.n)
+                trial_solution = self.solution_factory.create(self.solution_class, all_zero=True)
                 trial_solution.vector = self.solutions[index].vector + self.solutions[index].get_learn_rate(gen) * (self.solutions[s1].vector - self.solutions[s2].vector)
                 trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
                 trial_solution.change_vector(trial_solution.vector, mean=True, gen=gen)
 
-                target_fitness = self.solutions[index].apply_fitness_func(self.fitness_func)
-                trial_fitness = trial_solution.apply_fitness_func(self.fitness_func)
-                
-                if (self.optimal_minimal and trial_fitness < target_fitness) or (not self.optimal_minimal and trial_fitness > target_fitness):
-                    self.solutions[index] = trial_solution
+                self.solutions[index], _ = self.compare(self.solutions[index], trial_solution)
 
     def promote_stage(self, gen):
         for i in range(self.np):

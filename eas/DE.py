@@ -4,6 +4,7 @@ import numpy as np
 import eas
 import random
 
+
 # paper
 # Price, Kenneth V. "Differential evolution: a fast and simple numerical 
 # optimizer. " Proceedings of North American Fuzzy Information Processing. 
@@ -47,12 +48,11 @@ class DE(BaseEA):
 
             for j in range(self.np):
                 # 选择用于 crossover 的解向量的下标集合
-                
                 indexes = self.strategies['selection'](0, self.n, self.selection_n)
                 # len_of_indexes = len(indexes)
 
                 # 用于保存生成的测试向量
-                trial_solution = BaseEA.__SOLUTION_CLASS__.zeros(self.n)
+                trial_solution = self.solution_factory.create(self.solution_class, all_zero=True)
 
                 for k in range(self.n):
                     if random.random() < facotrs['cr'] or k == self.n -1:
@@ -63,11 +63,7 @@ class DE(BaseEA):
                         trial_solution.vector[k] = self.solutions[j].vector[k]
 
                 trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
-                target_fitness = self.solutions[j].apply_fitness_func(self.fitness_func)
-                trial_fitness = trial_solution.apply_fitness_func(self.fitness_func)
-                
-                if (self.optimal_minimal and trial_fitness < target_fitness) or (not self.optimal_minimal and trial_fitness > target_fitness):
-                    self.solutions[j] = trial_solution
+                self.solutions[j], _ = self.compare(self.solutions[j], trial_solution)
 
     def compute_difference(self, target_vector_index, indexes):
         difference = 0.0

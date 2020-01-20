@@ -1,15 +1,15 @@
 import eas
 import time
 import numpy as np
-from eas import HRO, selection, TrialSolution, BaseEA
+from eas import HRO, selection, TrialSolution, target
 from eas.factor import RandomFactor
+from eas.boundary import Boundary
 import matplotlib.pyplot as plt
 import math
 
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 
 eas.log_flag = True
-eas.boundary_strategy_flag = 'boundary'
 
 log_file = open(
     './storages/logs/HRO-target-function-01-%s.tsv' % time_str,
@@ -28,18 +28,17 @@ factors = {
     'r3': RandomFactor([0.0, 1.0], GEN, N),
 }
 
-BaseEA.__SOLUTION_CLASS__ = TrialSolution
 TrialSolution.TRIAL_LIMIT = TRIAL
 
-hro = HRO(NP, N, U, L, factors)
+hro = HRO(NP, N, U, L, factors,
+          optimal_minimal=True,
+          fitness_func=target.bent_cigar,
+          boundary_strategy=Boundary.BOUNDARY,
+          solution_class='TrialSolution')
+
 hro.register_strategy('selection', selection.random)
 hro.set_log_file(log_file)
 
-# target function 01
-def func01(xs):
-    return xs[0]**2 + 10**6 * sum([x**2 for x in xs[1:]])
-
-hro.set_fitness_func(func01)
 hro.fit(GEN)
 
 # 画图操作

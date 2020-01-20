@@ -36,16 +36,14 @@ class ABC(BaseEA):
         is_matrix_factor = BaseEA.is_matrix_factor(self.factors['r1'])
 
         for i in range(self.np):
-            selected_index = self.strategies['selection'](0, self.np, size=1, excludes=[i])
-            selected_solution = self.solutions[selected_index]
+            selected_solution = self.solutions[self.strategies['selection'](0, self.np, size=1, excludes=[i])]
             trial_solution = self.solution_factory.create(self.solution_class, all_zero=True)
             trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_matrix_factor, r_factor, selected_solution.vector)
             trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
-            target_fitness = self.solutions[i].apply_fitness_func(self.fitness_func)
-            trial_fitness = trial_solution.apply_fitness_func(self.fitness_func)
-            
-            if (self.optimal_minimal and trial_fitness < target_fitness) or (not self.optimal_minimal and trial_fitness > target_fitness):
-                self.solutions[i] = trial_solution
+
+            self.solutions[i], lost = self.compare(self.solutions[i], trial_solution)
+
+            if lost == 1:
                 self.solutions[i].trial_zero()
             else:
                 self.solutions[i].trial_increase()
@@ -56,7 +54,7 @@ class ABC(BaseEA):
         probabilities = fitness_list / fitness_sum
         r_factor = self.factors['r2'].next()
 
-        is_martirx_factor = BaseEA.is_matrix_factor(self.factors['r2'])
+        is_matrix_factor = BaseEA.is_matrix_factor(self.factors['r2'])
 
         for i in range(self.np):
             # protect the original probabilities
@@ -65,16 +63,13 @@ class ABC(BaseEA):
 
             selected_index = random.choices(list(range(self.np)), temp_probabilities)[0]
             selected_solution = self.solutions[selected_index]
-
             trial_solution = self.solution_factory.create(self.solution_class, all_zero=True)
-            trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_martirx_factor, r_factor, selected_solution.vector)
+            trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_matrix_factor, r_factor, selected_solution.vector)
             trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
 
-            target_fitness = self.solutions[i].apply_fitness_func(self.fitness_func)
-            trial_fitness = trial_solution.apply_fitness_func(self.fitness_func)
-            
-            if (self.optimal_minimal and trial_fitness < target_fitness) or (not self.optimal_minimal and trial_fitness > target_fitness):
-                self.solutions[i] = trial_solution
+            self.solutions[i], lost = self.compare(self.solutions[i], trial_solution)
+
+            if lost == 1:
                 self.solutions[i].trial_zero()
             else:
                 self.solutions[i].trial_increase()

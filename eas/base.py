@@ -1,5 +1,4 @@
 import numpy as np
-import random
 import eas
 from eas.factor import MatrixFactor
 from .solution import SolutionFactory, Solution
@@ -75,6 +74,16 @@ class BaseEA(object):
         if self.log_file is None:
             raise ValueError('need to set log file, if you want to use log activities')
         np.savetxt(self.log_file, np.append(best_vector, [fitness], axis=0)[np.newaxis], delimiter=',')
+
+    def compare(self, s, trial):
+        f = s.apply_fitness_func(self.fitness_func)
+        tf = trial.apply_fitness_func(self.fitness_func)
+
+        if (self.optimal_minimal and tf < f) or (
+                not self.optimal_minimal and tf > f):
+            return trial, 1
+
+        return s, -1
 
     @staticmethod
     def is_matrix_factor(factor):
