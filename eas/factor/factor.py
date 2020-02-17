@@ -6,6 +6,7 @@ from eas import helper
 import random
 import math
 
+
 class Factor(object):
     '''super factor
     '''
@@ -30,8 +31,10 @@ class Factor(object):
 
         return facotr
 
+
 def create_factor(gen, gen_func):
     return Factor(gen, gen_func)
+
 
 class ConstantFactor(Factor):
     '''constant factor
@@ -47,6 +50,7 @@ class ConstantFactor(Factor):
 
     def constant(self, g):
         return self.c
+
 
 class RandomFactor(Factor):
     '''random factor
@@ -75,6 +79,7 @@ class RandomFactor(Factor):
 
         return v if f > 0.5 else -v
 
+
 class LinearFactor(Factor):
     '''linear factor
     '''
@@ -93,6 +98,7 @@ class LinearFactor(Factor):
     
     def linear(self, g):
         return self._low + (1 - (g * 1.0) / self.gen) * (self._high - self._low)
+
 
 class ExpFactor(Factor):
     '''exponent factor

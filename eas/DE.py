@@ -39,21 +39,25 @@ class DE(BaseEA):
             self.append_best_fitness()
 
             # 选择基解向量
+            # 每一个基础的向量计算一个适应值放在fitness_list中
             fitness_list = [s.apply_fitness_func(self.fitness_func) for s in self.solutions]
+            # 在运行的时候输入值，optimal_minima为true的时候，选出fitness_list中的最小值
             base_index = self.strategies['selection_base'](fitness_list, self.optimal_minimal)
+            # 选出适应值最小的向量作为base_solution
             base_solution = self.solutions[base_index]
 
             # 每一次迭代都需要重新生成一次因子
             facotrs = self.get_factors()
 
             for j in range(self.np):
-                # 选择用于 crossover 的解向量的下标集合
+                # 选择用于 crossover 的解向量的下标集合,如果size为2返回的是两个下标
                 indexes = self.strategies['selection'](0, self.n, self.selection_n)
                 # len_of_indexes = len(indexes)
 
                 # 用于保存生成的测试向量
                 trial_solution = self.solution_factory.create(self.solution_class, all_zero=True)
 
+                # 维度进行循环
                 for k in range(self.n):
                     if random.random() < facotrs['cr'] or k == self.n -1:
                         # 计算分量的差
