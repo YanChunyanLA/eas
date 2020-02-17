@@ -46,7 +46,7 @@ class HRO(BaseEA):
             sterile_index = self.strategies['selection'](2 * self.group_size, self.np, size=1, excludes=[i])
             maintainer_index = self.strategies['selection'](0, self.group_size, size=1)
 
-            trial_solution = self.solution_factory.create(self.solution_class, all_zero=True)
+            trial_solution = self.create_solution(all_zero=True)
             trial_solution.vector = (factors['r1'] * self.solutions[sterile_index].vector + factors['r2'] * self.solutions[maintainer_index].vector) / (factors['r1'] + factors['r2'])
 
             trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)

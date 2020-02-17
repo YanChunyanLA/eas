@@ -18,6 +18,8 @@ class SolutionFactory(object):
             _class = TrialSolution
         if class_str == 'LabelSolution':
             _class = LabelSolution
+        if class_str == 'VelocitySolution':
+            _class = VelocitySolution
 
         return _class(vector)
 
@@ -98,3 +100,29 @@ class LabelSolution(Solution):
 
     def get_learn_rate(self, gen):
         return self.learn_rate * (self.seed - math.exp(gen / LabelSolution.GEN * math.log(self.seed)))
+
+
+class VelocitySolution(Solution):
+    def __init__(self, vector):
+        super(VelocitySolution, self).__init__(vector)
+        self.velocity = None
+        self.p_vector = vector  # the previous best vector is the initial vector at first
+
+    def set_velocity(self, **kwargs):
+        if 'velocity' in kwargs:
+            self.velocity = kwargs.get('velocity')
+
+        if 'uppervs' in kwargs and 'lowervs' in kwargs:
+            self.velocity = helper.init_vector(self.n, kwargs['uppervs'], kwargs['lowervs'])
+
+    def amend_velocity(self, uppervs, lowervs, boundary_strategy=Boundary.BOUNDARY):
+        self.velocity = Boundary.make_strategy(boundary_strategy)(self.velocity, uppervs, lowervs)
+
+    def update_velocity(self, best_vector, w, r1, r2):
+        ir1 = random.random()
+        ir2 = random.random()
+        self.velocity = w * self.velocity + r1 * ir1 * (self.p_vector - self.vector) + \
+            r2 * ir2 * (best_vector - self.vector)
+
+    def update_vector(self):
+        self.vector += self.velocity

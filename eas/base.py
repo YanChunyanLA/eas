@@ -24,12 +24,18 @@ class BaseEA(object):
 
         helper.must_callable(self.fitness_func)
 
-        self.solutions = [self.solution_factory.create(self.solution_class) for _ in range(self.np)]
+        self.solutions = [self.create_solution() for _ in range(self.np)]
+
         self.strategies = {}
         self.best_fitness_store = []
+        self.current_fitness_store = []
+        self.current_best_index = 0
         self.log_file = None
 
         helper.must_valid_dimension(self.n, self.upperxs, self.lowerxs)
+
+    def create_solution(self, all_zero=False):
+        return self.solution_factory.create(self.solution_class, all_zero=all_zero)
 
     def set_fitness_func(self, fitness_func):
         helper.must_callable(fitness_func)
@@ -53,11 +59,12 @@ class BaseEA(object):
         """每一次迭代中，需要将最优适应值保存
         存入 self.best_fitness_store 列表中
         """
-        fitness_list = [s.apply_fitness_func(self.fitness_func) for s in self.solutions]
-        fitness = min(fitness_list) if self.optimal_minimal else max(fitness_list)
+        self.current_fitness_store = [s.apply_fitness_func(self.fitness_func) for s in self.solutions]
+        fitness = min(self.current_fitness_store) if self.optimal_minimal else max(self.current_fitness_store)
+        self.current_best_index = self.current_fitness_store.index(fitness)
 
         if eas.log_flag:
-            self.log_best_vector(self.solutions[fitness_list.index(fitness)].vector, fitness)
+            self.log_best_vector(self.solutions[self.current_best_index].vector, fitness)
 
         self.best_fitness_store.append(fitness)
 

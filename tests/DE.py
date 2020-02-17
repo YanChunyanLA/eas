@@ -30,7 +30,7 @@ de = DE(NP, N, U, L, factors,
         fitness_func=target.bent_cigar,
         boundary_strategy=Boundary.BOUNDARY,
         solution_class='Solution')
-
+de.selection_n = 2
 
 de.set_log_file(log_file)
 de.register_strategy('selection', selection.random)
