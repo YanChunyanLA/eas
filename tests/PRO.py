@@ -1,7 +1,6 @@
-import eas
 import time
 import numpy as np
-from eas import PRO, selection, LabelSolution, BaseEA, target
+from eas import PRO, selection, LabelSolution, target
 from eas.factor import RandomFactor
 from eas.boundary import Boundary
 import matplotlib.pyplot as plt
@@ -20,7 +19,7 @@ N = 4
 U = np.array([100] * N)
 L = np.array([-100] * N)
 GEN = 3000
-NC = 8
+NC = 3
 
 factors = {
     'r1': RandomFactor([-1.0, 1.0], GEN, N),
@@ -39,10 +38,10 @@ pro = PRO(NP, N, U, L, NC, factors,
 pro.register_strategy('selection', selection.random)
 
 pro.fit(GEN)
-print(len(pro.best_fitness_store))
 
 # 画图操作
 plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in pro.best_fitness_store])
+# plt.plot(np.linspace(1, GEN, num=GEN), [v for v in pro.best_fitness_store])
 plt.xlabel('Gen')
 plt.ylabel('log(f(x))')
 plt.savefig('./storages/graphs/PRO-target-function-01-r1[-1--1]-r2[-1--1]-%s.png' % time_str)

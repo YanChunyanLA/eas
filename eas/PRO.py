@@ -2,9 +2,9 @@ from .base import BaseEA
 
 
 class PRO(BaseEA):
-    def __init__(self, _np, n, upperxs, lowerxs, LABEL_SIZE, factors, **kwargs):
+    def __init__(self, _np, n, upperxs, lowerxs, label_size, factors, **kwargs):
         BaseEA.__init__(self, _np, n, upperxs, lowerxs, factors, **kwargs)
-        self.label_size = LABEL_SIZE
+        self.label_size = label_size
         self.group_size = int(self.np / self.label_size)
 
     def get_factor_keys(self):
@@ -49,14 +49,12 @@ class PRO(BaseEA):
         for i in range(self.label_size):
             for j in range(self.group_size):
                 index = i * self.group_size + j
-                s1 = None
-                s2 = None
 
                 if i == 0:
                     s1, s2 = self.strategies['selection'](0, self.group_size, size=2, excludes=[index])
                 else:
                     s1, s2 = self.strategies['selection'](self.group_size * i, self.group_size * (i + 1), size=2, excludes=[index])
-                
+
                 trial_solution = self.create_solution(all_zero=True)
                 trial_solution.vector = self.solutions[index].vector + self.solutions[index].get_learn_rate(gen) * (self.solutions[s1].vector - self.solutions[s2].vector)
                 trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)

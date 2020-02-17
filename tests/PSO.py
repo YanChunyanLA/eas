@@ -25,9 +25,9 @@ gen = 3000
 TRIAL = 8
 
 factors = {
-    'w': ConstantFactor(0.8, gen),
-    'r1': ConstantFactor(0.1, gen),
-    'r2': ConstantFactor(0.1, gen),
+    'w': LinearFactor([0, 1], gen),
+    'r1': ConstantFactor(2, gen),
+    'r2': ConstantFactor(2, gen),
 }
 
 # factors = {

@@ -1,6 +1,10 @@
 from .base import BaseEA
 
 
+# paper
+# Shi, Y., & Eberhart, R. C. (1999, July). Empirical study of particle swarm optimization.
+# In Proceedings of the 1999 Congress on Evolutionary Computation-CEC99 (Cat. No. 99TH8406) (Vol. 3, pp. 1945-1950).
+# IEEE.
 class PSO(BaseEA):
     def __init__(self, _np, n, upperxs, lowerxs, uppervs, lowervs, factors, **kwargs):
         BaseEA.__init__(self, _np, n, upperxs, lowerxs, factors, **kwargs)

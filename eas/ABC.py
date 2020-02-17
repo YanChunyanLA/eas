@@ -28,7 +28,7 @@ class ABC(BaseEA):
             self.append_best_fitness()
 
             self.employee_stage(i)
-            self.outlooker_stage(i)
+            self.onlooker_stage(i)
             self.scouter_stage(i)
 
     def employee_stage(self, gen):
@@ -48,7 +48,7 @@ class ABC(BaseEA):
             else:
                 self.solutions[i].trial_increase()
 
-    def outlooker_stage(self, gen):
+    def onlooker_stage(self, gen):
         fitness_list = np.array([s.apply_fitness_func(self.fitness_func) for s in self.solutions])
         fitness_sum = sum(fitness_list)
         probabilities = fitness_list / fitness_sum
