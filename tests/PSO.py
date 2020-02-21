@@ -15,15 +15,19 @@ log_file = open(
     './storages/logs/PSO-target-function-01-r1[-1--1]-r2[-1--1]-%s.tsv' % time_str,
     mode='ab')
 
-NP = 60
-N = 4
-U = np.array([100] * N)
+NP = 60  # 种群的数目
+N = 4  # 维度
+# 初始化的粒子的位置
+U = np.array([100] * N)  # 生成一个初始的4维向量
 L = np.array([-100] * N)
+# 初始化的粒子速度
 u = np.array([5] * N)
 l = np.array([-5] * N)
+# 迭代的次数
 gen = 3000
 TRIAL = 8
 
+# 初始化的惯性因子和学习因子
 factors = {
     'w': LinearFactor([0, 1], gen),
     'r1': ConstantFactor(2, gen),

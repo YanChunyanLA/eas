@@ -12,7 +12,6 @@ class SolutionFactory(object):
         self.kwargs = kwargs
 
     def create(self, class_str, all_zero=False):
-        # 对可行解进行初始化
         vector = np.zeros(self.n) if all_zero else helper.init_vector(self.n, self.upperxs, self.lowerxs)
         _class = Solution
         if class_str == 'TrialSolution':
@@ -21,6 +20,7 @@ class SolutionFactory(object):
             _class = LabelSolution
         if class_str == 'VelocitySolution':
             _class = VelocitySolution
+
         return _class(vector)
 
 
@@ -126,4 +126,3 @@ class VelocitySolution(Solution):
 
     def update_vector(self):
         self.vector += self.velocity
-

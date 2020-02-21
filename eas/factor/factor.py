@@ -56,6 +56,7 @@ class ConstantFactor(Factor):
     def constant(self, g):
         return self.c
 
+
 class RandomFactor(Factor):
     """random factor
     the factor generated uniformly in the given range.
