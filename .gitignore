@@ -3,3 +3,4 @@ __pycache__
 eas.egg-info
 .idea
 dist
+build
