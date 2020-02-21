@@ -15,11 +15,11 @@ log_file = open(
     './storages/logs/DE-target-function-01-cr0.3-f0.5-%s.tsv' % time_str,
     mode='ab')
 
-NP = 60
+NP = 10
 N = 4
 U = np.array([100] * N)
 L = np.array([-100] * N)
-GEN = 3000
+GEN = 20
 factors = {
     'cr': ConstantFactor(0.3, GEN),
     'f': ConstantFactor(0.5, GEN),

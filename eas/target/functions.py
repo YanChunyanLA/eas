@@ -2,12 +2,16 @@ import math
 from eas import helper
 
 
+def Shpere(xs):
+    return -sum([x**2 for x in xs[0:]]) + 100
+
+
 def bent_cigar(xs):
     return xs[0]**2 + 10**6 * sum([x**2 for x in xs[1:]])
 
 
 def discus(xs):
-    return 10**6 * xs[0]**2 + sum([x**2 for x in x[1:]])
+    return 10**6 * xs[0]**2 + sum([x**2 for x in xs[1:]])
 
 
 def weierstrass(a, b, kmax):

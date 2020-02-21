@@ -11,7 +11,6 @@ class PSO(BaseEA):
         self.uppervs = uppervs
         self.lowervs = lowervs
 
-        # 初始化速度
         for i in range(self.np):
             self.solutions[i].set_velocity(uppervs=self.uppervs, lowervs=self.lowervs)
 
