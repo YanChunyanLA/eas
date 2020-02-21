@@ -42,6 +42,7 @@ class HRO(BaseEA):
             'r1': self.factors['r1'].next(),
             'r2': self.factors['r2'].next(),
         }
+
         for i in range(2 * self.group_size, self.np):
             sterile_index = self.strategies['selection'](2 * self.group_size, self.np, size=1, excludes=[i])
             maintainer_index = self.strategies['selection'](0, self.group_size, size=1)

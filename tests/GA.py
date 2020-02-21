@@ -26,8 +26,8 @@ gen = 3000
 
 # 初始化的交叉率和变异率
 factors = {
-    'cr': ConstantFactor(0.8, gen),  # crossRate
-    'al': ConstantFactor(0.05, gen),  # alterRate
+    'cr': ConstantFactor(1, gen),  # crossRate
+    'al': ConstantFactor(0.9, gen),  # alterRate
 }
 
 # 对算法进行初始化，并且将写好的值进行传入

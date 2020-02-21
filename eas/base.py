@@ -1,14 +1,12 @@
 import numpy as np
 import eas
 from eas.factor import MatrixFactor
-from .solution import SolutionFactory, Solution
+from .solution import SolutionFactory
 from eas import helper
 from eas.boundary import Boundary
 
 
 class BaseEA(object):
-    __SOLUTION_CLASS__ = Solution  # default solution derived from Solution
-
     def __init__(self, _np, n, upperxs, lowerxs, factors, **kwargs):
         # 对每一个的个体进行初始化
         self.np = _np
@@ -18,7 +16,7 @@ class BaseEA(object):
         self.lowerxs = lowerxs
         # 对过程中需要用到的因子进行初始化
         self.factors = factors
-        # 暂时不知道
+        # 目标函数最优求解是否为最小值，True 最小，False 最大
         self.optimal_minimal = kwargs.get('optimal_minimal', True)
         self.boundary_strategy = kwargs.get('boundary_strategy', Boundary.BOUNDARY)
         # fitness_func就是最终需要求取的函数，或者说是优化的问题
@@ -58,13 +56,16 @@ class BaseEA(object):
                 raise ValueError('lost the factor')
 
     def get_factor_keys(self):
+        """定义该方法的含义在于，告诉调用者必须传入包含相应 key 的因子
+        :return:
+        """
         raise NotImplementedError
 
     def fit(self, gen):
         raise NotImplementedError
 
     def append_best_fitness(self):
-        """每一次迭代中，需要将最优适应值保存
+        """ 每一次迭代中，需要将最优适应值保存
         存入 self.best_fitness_store 列表中
         """
         # 计算每个可行解的fitness
