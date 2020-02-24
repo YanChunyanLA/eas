@@ -33,10 +33,12 @@ def griewank(xs):
     return 1.0 / 4000 * sum([x for x in xs]) + 1 - helper.multiply([x / math.sqrt(i + 2) for i, x in enumerate(xs)])
 
 
-# experiment
-def exp_sphere(xs):
-    d = len(xs)
-    return sum([(10**6)**((i - 1) / (d - 1)) * xs[i-1]**2 for i in range(1, d + 1)])
+def elliptic(f_star):
+    def exp_elliptic(xs):
+        d = len(xs)
+        return sum([(10 ** 6) ** ((i - 1) / (d - 1)) * xs[i - 1] ** 2 for i in range(1, d + 1)]) + f_star
+
+    return exp_elliptic
 
 
 def exp_rastrigin(xs):

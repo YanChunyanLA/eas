@@ -92,7 +92,7 @@ class BaseEA(object):
     def log_best_vector(self, best_vector, fitness):
         if self.log_file is None:
             raise ValueError('need to set log file, if you want to use log activities')
-        np.savetxt(self.log_file, np.append(best_vector, [fitness], axis=0)[np.newaxis], delimiter=',')
+        np.savetxt(self.log_file, np.append([], [fitness], axis=0)[np.newaxis], delimiter=',')
 
     def compare(self, s, trial):
         f = s.apply_fitness_func(self.fitness_func)
