@@ -1,9 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import time
+
+algorithm_name = 'PRO'
+
+time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 
 data = np.loadtxt(
-    './storages/logs/PRO-function-01-2020-02-24-13-46-45-summary.tsv',
+    './storages/logs/%s-function-01-2020-02-24-13-46-45-summary.tsv' % algorithm_name,
     delimiter=',',
     dtype=float
 )
@@ -16,5 +21,5 @@ for i in range(5):
         plt.xlabel('Gen')
         plt.ylabel('log10(f(x))')
 
-# plt.savefig('./storages/graphs/PRO-target-function-01-r1[-1--1]-r2[-1--1]-%s.png' % time_str)
+plt.savefig('./storages/graphs/%s-function-01-%s-summary.png' % (algorithm_name, time_str))
 plt.show()

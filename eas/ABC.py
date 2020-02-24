@@ -1,4 +1,4 @@
-from eas import helper, TrialSolution, BaseEA
+from eas import helper, TrialSolution, BaseEA, selection
 import numpy as np
 import random
 
@@ -36,7 +36,10 @@ class ABC(BaseEA):
         is_matrix_factor = BaseEA.is_matrix_factor(self.factors['r1'])
 
         for i in range(self.np):
-            selected_solution = self.solutions[self.strategies['selection'](0, self.np, size=1, excludes=[i])]
+            # 选择的个体下标
+            selected_index = selection.random(0, self.np, size=1, excludes=[i])
+            selected_solution = self.solutions[selected_index]
+
             trial_solution = self.create_solution(all_zero=True)
             trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_matrix_factor, r_factor, selected_solution.vector)
             trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
