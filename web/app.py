@@ -1,6 +1,7 @@
 import web
 import json
 import numpy as np
+import eas.helper as easHelper
 
 c_config_file = './config.json'
 c_log_dir = '../storages/logs'
@@ -59,6 +60,14 @@ class index:
         return render.index(title, functions)
 
 
+class statistic:
+    def GET(self):
+        title = config('app.name')
+        result = config('result', [])
+        functions = list(set(map(lambda d: d['function'], result)))
+        return render.statistic(title, functions)
+
+
 class get_algorithm:
     def __init__(self):
         web.header('Content-Type', 'application/json')
@@ -66,11 +75,13 @@ class get_algorithm:
     def GET(self):
         query = web.input()
         function_name = query['functionName']
+        t_debug('result111111111111', function_name)
 
         result = list(set(list(map(lambda d: d['algorithm'],
                                    filter(lambda d: d['function'] == function_name,
                                           config('result', []))))))
-        t_debug(result)
+
+        t_debug('result111111111111', result)
         return json.dumps(result)
 
 
@@ -86,9 +97,9 @@ class get_log_file:
 
         t_debug(function_name, algorithms)
 
-        records = list(filter(lambda d: d['algorithm'] in algorithms,
-                             filter(lambda d: d['function'] == function_name,
-                                    config('result', []))))
+        records = list(filter(
+            lambda d: d['function'] == function_name and d['algorithm'] in algorithms,
+            config('result', [])))
 
         def wrap(d):
             d['numOfLines'] = u_file_lines(c_log_dir + '/' + d['filename'])
@@ -113,6 +124,7 @@ class get_graph_data:
         for i, line_set in enumerate(line_sets):
             t_debug('line_set', line_set)
             data = u_file_data_by_lines(c_log_dir + '/' + line_set['filename'], np.array(line_set['lines']) - 1)
+
             for line, d in zip(line_set['lines'], data.tolist()):
                 result.append({
                     'legend': line_set['algorithm'] + '-' + str(i) + '-' + str(line),
@@ -122,13 +134,27 @@ class get_graph_data:
         return json.dumps(result)
 
 
+class get_summary:
+    def __init__(self):
+        web.header('Content-Type', 'application/json')
+
+    def GET(self):
+        query = web.input()
+        function_name = query['functionName']
+        filename = query['filename']
+
+        # for record in filter(lambda d: d['function'] == function_name and d['filename'] == filename, config('result', [])):
+        #     pass
+
+
 if __name__ == "__main__":
     urls = (
         '/', 'index',
+        '/statistic', 'statistic',
         '/get_algorithm', 'get_algorithm',
         '/get_log_file', 'get_log_file',
         '/get_graph_data', 'get_graph_data',
+        '/get_summary', 'get_summary',
     )
     app = web.application(urls, globals())
     app.run()
-

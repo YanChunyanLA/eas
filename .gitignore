@@ -4,3 +4,4 @@ eas.egg-info
 .idea
 dist
 build
+*.ipynb

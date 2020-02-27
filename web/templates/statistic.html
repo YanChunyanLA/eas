@@ -1,0 +1,45 @@
+$def with (title, functions)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$title</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.6.0/echarts.min.js"></script>
+    </head>
+<style>
+    .chart-container {
+        height: 600px;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="row">
+            <nav class="nav">
+                <a class="nav-link" href="/">图</a>
+                <a class="nav-link active" href="/statistic">表</a>
+            </nav>
+        </div>
+        <div>
+            <h3>统计信息（想写的时候再写）</h3>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-2">
+                <label>函数</label>
+            </div>
+            <div class="col-md-4">
+                <select id="sltFunction" class="form-control">
+                    $for function in functions:
+                        <option value="">新选择...</option>
+                        <option value="$function">$function</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+<script src="../static/js/app.js"></script>
+<script src="../static/js/statistic.js"></script>
+</body>
+</html>

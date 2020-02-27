@@ -48,3 +48,12 @@ def must_valid_dimension(n, *args):
 def must_callable(o):
     if not callable(o):
         raise TypeError
+
+
+def statistics(xs, minimal=True):
+    return {
+        'mean': xs.mean(),
+        'bestValue': xs.min() if minimal else xs.max(),
+        'worstValue': xs.max() if minimal else xs.min(),
+        'std': np.std(xs),
+    }
