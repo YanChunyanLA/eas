@@ -1,0 +1,30 @@
+{
+  "app": {
+    "name": "Vis"
+  },
+  "logPath": "./storages/logs",
+  "numOfRow": 50,
+  "numOfCol": 3000,
+  "result": [
+    {
+      "function": "f1",
+      "algorithm": "GA",
+      "filename": "GA-function-01-2020-02-24-14-31-04-summary.tsv"
+    },
+    {
+      "function": "f1",
+      "algorithm": "GA",
+      "filename": "GA-function-01-2020-02-24-14-31-05-summary.tsv"
+    },
+    {
+      "function": "f1",
+      "algorithm": "HRO",
+      "filename": "HRO-function-01-2020-02-24-14-37-42-summary.tsv"
+    },
+    {
+      "function": "f1",
+      "algorithm": "PRO",
+      "filename": "PRO-function-01-2020-02-24-13-46-45-summary.tsv"
+    }
+  ]
+}

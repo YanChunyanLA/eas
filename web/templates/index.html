@@ -1,0 +1,63 @@
+$def with (title, functions)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$title</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.6.0/echarts.min.js"></script>
+    </head>
+<style>
+    .chart-container {
+        height: 600px;
+    }
+</style>
+<body>
+    <div class="container">
+        <div>
+            <h3>维度：函数 + 算法</h3>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-2">
+                <label>函数</label>
+            </div>
+            <div class="col-md-4">
+                <select id="sltFunction" class="form-control">
+                    $for function in functions:
+                        <option value="">新选择...</option>
+                        <option value="$function">$function</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-2">
+                <label>算法</label>
+            </div>
+            <div class="col-md-4">
+                <select id="sltAlgorithm" class="form-control" multiple>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button id="btnAlgorithm" class=" form-control btn btn-primary">Step 1: 选择算法</button>
+            </div>
+            <div class="col-md-2">
+                <button id="btnDraw" class=" form-control btn btn-primary">Step 2: 生成图像</button>
+            </div>
+            <div class="col-md-2">
+                <div class="form-check form-check-inline">
+                    <input id="ckbLog10" class="form-check-input" type="checkbox" checked>
+                    <label class="form-check-label">取 log10</label>
+                </div>
+            </div>
+        </div>
+        <div id="logFileContainer" class="container">
+        </div>
+        <div id="chart" class="row chart-container">
+            111
+        </div>
+    </div>
+<script src="../static/js/app.js"></script>
+</body>
+</html>
