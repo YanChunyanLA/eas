@@ -1,0 +1,70 @@
+{
+  "app": {
+    "name": "Vis"
+  },
+  "logPath": "./storages/logs",
+  "numOfRow": 50,
+  "numOfCol": 3000,
+  "result": [
+    {
+      "function": "f1",
+      "algorithm": "ABC",
+      "filename": "ABC-function-01-2020-02-26-15-27-39-summary.tsv"
+    },
+    {
+      "function": "f1",
+      "algorithm": "DE",
+      "filename": "DE-function-01-2020-02-26-15-59-25-summary.tsv"
+    },
+    {
+      "function": "f1",
+      "algorithm": "GA",
+      "filename": "GA-function-01-2020-02-26-16-19-36-summary.tsv"
+    },
+    {
+      "function": "f1",
+      "algorithm": "HRO",
+      "filename": "HRO-function-01-2020-02-26-16-27-49-summary.tsv"
+    },
+    {
+      "function": "f1",
+      "algorithm": "PRO",
+      "filename": "PRO-function-01-2020-02-26-16-39-05-summary.tsv"
+    },
+    {
+      "function": "f1",
+      "algorithm": "PSO",
+      "filename": "PSO-function-01-2020-02-26-17-00-34-summary.tsv"
+    },
+    {
+      "function": "f2",
+      "algorithm": "ABC",
+      "filename": "ABC-function-02-2020-02-26-18-26-50-summary.tsv"
+    },
+    {
+      "function": "f2",
+      "algorithm": "DE",
+      "filename": "DE-function-02-2020-02-26-20-16-02-summary.tsv"
+    },
+    {
+      "function": "f2",
+      "algorithm": "GA",
+      "filename": "GA-function-02-2020-02-26-20-34-40-summary.tsv"
+    },
+    {
+      "function": "f2",
+      "algorithm": "HRO",
+      "filename": "HRO-function-02-2020-02-26-20-39-35-summary.tsv"
+    },
+    {
+      "function": "f2",
+      "algorithm": "PRO",
+      "filename": "PRO-function-02-2020-02-26-21-00-53-summary.tsv"
+    },
+    {
+      "function": "f2",
+      "algorithm": "PSO",
+      "filename": "PSO-function-02-2020-02-26-21-26-55-summary.tsv"
+    }
+  ]
+}

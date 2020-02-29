@@ -1,0 +1,11 @@
+import winsound
+
+
+class PlayMusic(object):
+    """播放提示音乐"""
+    def __init__(self, music, flag):
+        self.music = music
+        self.flag = flag
+
+    def run(self):
+        winsound.PlaySound(f'{self.music}', self.flag)

@@ -8,14 +8,14 @@ from eas import PSO
 
 # 常规参数项
 eas.log_flag = False  # 用于记录日志开关，当前记录信息
-times = 1  # 算法执行的总次数
+times = 50  # 算法执行的总次数
 gen = 3000  # 3000  # 一次算法的迭代次数
 _np = 60  # 60  # 总群个体的数量
 n = 10  # 10  # 解向量的维数
 # 向量越界策略
 boundary_strategy = eas.boundary.Boundary.BOUNDARY
 # 目标函数，其最优解为 100
-fitness_func = eas.target.elliptic(100)
+fitness_func = eas.target.f1
 
 # 参数项
 upperxs = np.array([100] * n) # 向量各分量上限

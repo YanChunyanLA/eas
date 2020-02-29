@@ -36,7 +36,8 @@ class GA(BaseEA):
         if self.optimal_minimal:
             # 如果是求最小值，就将数值倒过来
             for i, val in enumerate(roulette_list):
-                roulette_list[i] = 1 / roulette_list[i]
+                if roulette_list[i] != 0:
+                    roulette_list[i] = 1 / roulette_list[i]
 
         current_fitness_sum = sum(roulette_list)
 

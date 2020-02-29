@@ -15,7 +15,7 @@ n = 10  # 10  # 解向量的维数
 # 向量越界策略
 boundary_strategy = eas.boundary.Boundary.BOUNDARY
 # 目标函数，其最优解为 100
-fitness_func = eas.target.elliptic(100)
+fitness_func = eas.target.f1
 
 # 参数项
 upperxs = np.array([100] * n)  # 向量各分量上限

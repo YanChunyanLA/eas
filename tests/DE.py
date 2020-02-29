@@ -17,9 +17,9 @@ log_file = open(
 
 NP = 10
 N = 4
-U = np.array([100] * N)
-L = np.array([-100] * N)
-GEN = 20
+U = np.array([50] * N)
+L = np.array([-50] * N)
+GEN = 3000
 factors = {
     'cr': ConstantFactor(0.3, GEN),
     'f': ConstantFactor(0.5, GEN),
@@ -27,7 +27,7 @@ factors = {
 
 de = DE(NP, N, U, L, factors,
         optimal_minimal=True,
-        fitness_func=target.bent_cigar,
+        fitness_func=target.exp_rastrigin,
         boundary_strategy=Boundary.BOUNDARY,
         solution_class='Solution')
 de.selection_n = 2
