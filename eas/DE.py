@@ -13,7 +13,7 @@ class DE(BaseEA):
         self.check_factors()
 
         # 必须为 2 的倍数
-        self.selection_n = 4
+        self.selection_n = 2
 
     def check_factors(self):
         BaseEA.check_factors(self)

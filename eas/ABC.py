@@ -21,18 +21,19 @@ class ABC(BaseEA):
     def get_exceeded_trials(self):
         """返回试验次数等于阈值的个体下标
         """
-        return [k for k, s in enumerate(self.solutions) if s.trial == TrialSolution.TRIAL_LIMIT]
+        return [k for k, s in enumerate(self.solutions)
+                if s.trial == TrialSolution.TRIAL_LIMIT]
 
     def fit(self, gen):
-        for i in range(gen):
+        for g in range(gen):
             self.append_best_fitness()
 
-            self.employee_stage(i)
-            self.onlooker_stage(i)
-            self.scouter_stage(i)
+            self.employee_stage(g)
+            self.onlooker_stage(g)
+            self.scouter_stage(g)
 
     def employee_stage(self, gen):
-        r_factor = self.factors['r1'].generate(gen, add_one=True)
+        r_factor = self.factors['r1'].next()
         is_matrix_factor = BaseEA.is_matrix_factor(self.factors['r1'])
 
         for i in range(self.np):
@@ -55,7 +56,7 @@ class ABC(BaseEA):
         fitness_list = np.array([s.apply_fitness_func(self.fitness_func) for s in self.solutions])
         fitness_sum = sum(fitness_list)
         probabilities = fitness_list / fitness_sum
-        r_factor = self.factors['r2'].generate(gen, add_one=True)
+        r_factor = self.factors['r2'].next()
 
         is_matrix_factor = BaseEA.is_matrix_factor(self.factors['r2'])
 

@@ -1,5 +1,6 @@
 from .base import BaseEA
 from eas import selection
+import random
 
 
 class PRO(BaseEA):
@@ -47,12 +48,13 @@ class PRO(BaseEA):
                     s_index = selection.random(0, self.group_size, size=1, excludes=[index])
                     a_index = selection.random(self.group_size, self.group_size * 2, size=1, excludes=[index])
 
-                    new_solution = self.create_solution(all_zero=True)
-                    new_solution.vector = (factors['r1'] * self.solutions[s_index].vector + factors['r2'] * self.solutions[a_index].vector) / (factors['r1'] + factors['r2'])
-                    new_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
-                    new_solution.change_vector(new_solution.vector, mean=True, gen=gen)
-
-                    self.solutions[index] = new_solution
+                    # new_solution = self.create_solution(all_zero=True)
+                    # new_solution.vector = (factors['r1'] * self.solutions[s_index].vector + factors['r2'] * self.solutions[a_index].vector) / (factors['r1'] + factors['r2'])
+                    # new_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
+                    # new_solution.change_vector(new_solution.vector, mean=True, gen=gen)
+                    #
+                    # self.solutions[index] = new_solution
+                    self.solutions[index] = self.create_solution(all_zero=False)
 
     def learn_stage(self, gen):
         """学习阶段，组间学习
@@ -71,7 +73,14 @@ class PRO(BaseEA):
                 # 对新生成的解向量进行验证
                 # 如果适应值适于原先的，则进行替换
                 trial_solution = self.create_solution(all_zero=True)
-                trial_solution.vector = self.solutions[index].vector + self.solutions[index].get_learn_rate(gen) * (self.solutions[s1].vector - self.solutions[s2].vector)
+
+                rate = self.solutions[index].get_learn_rate(gen)
+                for k in range(self.n):
+                    trial_solution.vector[k] = self.solutions[index].vector[k] + \
+                                                rate * (self.solutions[s1].vector[k] - self.solutions[s2].vector[k])
+
+                # trial_solution.vector = self.solutions[index].vector + self.solutions[index].get_learn_rate(gen) * (self.solutions[s1].vector - self.solutions[s2].vector)
+
                 trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
                 # 传入 mean=True 的函数在于：改变解向量的同时记录之前个体的解向量的平均值（各分量的平均值）
                 trial_solution.change_vector(trial_solution.vector, mean=True, gen=gen)
@@ -86,6 +95,12 @@ class PRO(BaseEA):
             # 在 PRO 中，每个解向量自身会有一个随机的学习率
             # 按迭代次数的增加向降低
             learn_rate = self.solutions[i].get_learn_rate(gen)
-            self.solutions[i].vector = self.solutions[i].vector + learn_rate * (self.solutions[i].mean_vector - self.solutions[i].vector)
+
+            for j in range(self.n):
+                direct = 1 if random.random() > 0.5 else -1
+                self.solutions[i].vector[j] = self.solutions[i].vector[j] + \
+                                              direct * learn_rate * \
+                                              (self.solutions[i].mean_vector[j] - self.solutions[i].vector[j])
+
             self.solutions[i].amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
             self.solutions[i].change_vector(self.solutions[i].vector)

@@ -99,7 +99,7 @@ class LabelSolution(Solution):
         return len([label for label in self.labels if label == LabelSolution.LABEL_SIZE - 1]) == LabelSolution.LABEL_SIZE
 
     def get_learn_rate(self, gen):
-        return self.learn_rate * (self.seed - math.exp(gen / LabelSolution.GEN * math.log(self.seed)))
+        return self.seed - math.exp(gen / LabelSolution.GEN * math.log(self.seed))
 
 
 class VelocitySolution(Solution):
