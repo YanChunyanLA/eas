@@ -48,13 +48,13 @@ class PRO(BaseEA):
                     s_index = selection.random(0, self.group_size, size=1, excludes=[index])
                     a_index = selection.random(self.group_size, self.group_size * 2, size=1, excludes=[index])
 
-                    # new_solution = self.create_solution(all_zero=True)
-                    # new_solution.vector = (factors['r1'] * self.solutions[s_index].vector + factors['r2'] * self.solutions[a_index].vector) / (factors['r1'] + factors['r2'])
-                    # new_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
-                    # new_solution.change_vector(new_solution.vector, mean=True, gen=gen)
-                    #
-                    # self.solutions[index] = new_solution
-                    self.solutions[index] = self.create_solution(all_zero=False)
+                    new_solution = self.create_solution(all_zero=True)
+                    new_solution.vector = (factors['r1'] * self.solutions[s_index].vector + factors['r2'] * self.solutions[a_index].vector) / (factors['r1'] + factors['r2'])
+                    new_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
+                    new_solution.change_vector(new_solution.vector, mean=True, gen=gen)
+
+                    self.solutions[index] = new_solution
+
 
     def learn_stage(self, gen):
         """学习阶段，组间学习
@@ -96,11 +96,9 @@ class PRO(BaseEA):
             # 按迭代次数的增加向降低
             learn_rate = self.solutions[i].get_learn_rate(gen)
 
-            for j in range(self.n):
-                direct = 1 if random.random() > 0.5 else -1
-                self.solutions[i].vector[j] = self.solutions[i].vector[j] + \
-                                              direct * learn_rate * \
-                                              (self.solutions[i].mean_vector[j] - self.solutions[i].vector[j])
+            self.solutions[i].vector = self.solutions[i].vector + \
+                                       learn_rate * \
+                                       (self.solutions[i].mean_vector - self.solutions[i].vector)
 
             self.solutions[i].amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
             self.solutions[i].change_vector(self.solutions[i].vector)

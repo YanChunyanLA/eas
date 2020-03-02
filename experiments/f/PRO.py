@@ -43,7 +43,7 @@ fitness_func = eas.target.f1
 upperxs = np.array([100] * n) # 向量各分量上限
 lowerxs = np.array([-100] * n) # 向量各分量下限
 ls = 3 # 分组要求，群体每次分成 3 组
-eas.LabelSolution.LABEL_SIZE = ls  # PRO 中解向量类需要共享组数信息
+eas.LabelSolution.LABEL_SIZE = 3  # PRO 中解向量类需要共享组数信息
 eas.LabelSolution.GEN = gen  # PRO 中解向量需要共享迭代数信息
 
 # 开始
@@ -58,8 +58,10 @@ for i in range(times):
     factors = {
         # r1 r2 分别为在 rating_phase 使用到的两个因子
         # 每一次迭代中返回 [-1.0, 1.0] 区间的随机数
-        'r1': eas.factor.RandomMatrixFactor([-1.0, 1.0], gen, n),
-        'r2': eas.factor.RandomMatrixFactor([-1.0, 1.0], gen, n),
+        'r1': eas.factor.RandomMatrixFactor([-1, 1.0], gen, n),
+        'r2': eas.factor.RandomMatrixFactor([-1, 1.0], gen, n),
+        # 'r1': eas.factor.RandomFactor([0, 1.0], gen),
+        # 'r2': eas.factor.RandomFactor([0, 1.0], gen),
     }
 
     algo = PRO(_np, n, upperxs, lowerxs,
@@ -89,5 +91,5 @@ plt.title(func_key)
 plt.xlabel('gen')
 plt.ylabel('log10(%s)' % func_key)
 plt.legend()
-plt.savefig('./storages/graphs/m/ABC-%s-%s.png' % (func_key, time_str), dpi=1280)
+plt.savefig('./storages/graphs/m/PRO-%s-%s.png' % (func_key, time_str), dpi=1280)
 plt.show()

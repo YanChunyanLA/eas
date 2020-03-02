@@ -78,7 +78,7 @@ class LabelSolution(Solution):
         Solution.__init__(self, vector)
         self.labels = []
         self.learn_rate = random.random()
-        self.seed = random.choice(list(range(1, LabelSolution.LABEL_SIZE)))
+        self.seed = random.choice(np.linspace(0.0001, 0.01, LabelSolution.LABEL_SIZE))
 
     def get_current_label(self):
         """at each iteration, instances of Label should invoke this method to 
@@ -99,7 +99,7 @@ class LabelSolution(Solution):
         return len([label for label in self.labels if label == LabelSolution.LABEL_SIZE - 1]) == LabelSolution.LABEL_SIZE
 
     def get_learn_rate(self, gen):
-        return self.seed - math.exp(gen / LabelSolution.GEN * math.log(self.seed))
+        return self.learn_rate * (self.seed - math.exp(gen / LabelSolution.GEN * math.log(self.seed)))
 
 
 class VelocitySolution(Solution):
