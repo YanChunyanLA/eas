@@ -1,3 +1,4 @@
 *.png
 
 !*-summary.png
+!*-curve.pny

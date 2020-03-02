@@ -8,15 +8,15 @@ log_dir = '../../storages/logs'
 graph_dir = '../../storages/graphs'
 
 log_files = {
-    'ABC': 'ABC-function-05-2020-02-27-16-00-00-summary.tsv',
-    'DE': 'DE-function-05-2020-02-27-16-34-12-summary.tsv',
-    'GA': 'GA-function-05-2020-02-27-16-57-32-summary.tsv',
-    'HRO': 'HRO-function-05-2020-02-27-17-03-46-summary.tsv',
-    'PSO': 'PSO-function-05-2020-02-27-17-47-14-summary.tsv',
-    'PRO': 'PRO-function-05-2020-02-27-17-18-42-summary.tsv',
+    'ABC': 'ABC-function-09-2020-02-28-12-49-34-summary.tsv',
+    'DE': 'DE-function-09-2020-02-28-13-16-42-summary.tsv',
+    'GA': 'GA-function-09-2020-02-28-13-36-14-summary.tsv',
+    'HRO': 'HRO-function-09-2020-02-28-13-45-26-summary.tsv',
+    'PSO': 'PSO-function-09-2020-02-28-14-29-48-summary.tsv',
+    'PRO': 'PRO-function-09-2020-02-28-14-09-58-summary.tsv',
 }
 
-fp = open('./tsv/f5.tsv', 'wt')
+fp = open('./tsv/f9.tsv', 'wt')
 writer = csv.writer(fp, delimiter='\t')
 writer.writerow(['algo', 'mean', 'best', 'worst', 'std'])
 
@@ -34,10 +34,10 @@ for algo, file in log_files.items():
 fp.close()
 
 plt.ylabel('gen')
-plt.ylabel('log10(f5)')
+plt.ylabel('log10(f9)')
 plt.legend()
 plt.savefig(
-    graph_dir + '/' + 'f5-' + time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time())) + '-curve.png',
+    graph_dir + '/' + 'f9-' + time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time())) + '-curve.png',
     dpi=1280
 )
 plt.show()
