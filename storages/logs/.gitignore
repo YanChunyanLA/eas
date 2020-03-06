@@ -1,4 +1,1 @@
-*.tsv
 *.csv
-
-!*-summary.tsv
