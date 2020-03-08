@@ -30,7 +30,7 @@ func_key = sys.argv[1]
 
 # 常规参数项
 eas.log_flag = False  # 用于记录日志开关，当前记录信息
-times = 2 if len(sys.argv) <= 2 else int(sys.argv[2]) # 算法执行的总次数  TODO
+times = 10 if len(sys.argv) <= 2 else int(sys.argv[2]) # 算法执行的总次数  TODO
 gen = 3000  # 3000  # 一次算法的迭代次数
 _np = 60  # 60  # 总群个体的数量
 n = 10  # 10  # 解向量的维数
@@ -74,17 +74,17 @@ for i in range(times):
 
 log_file.close()
 
-data = np.loadtxt(
-    './storages/logs/m/ABC-%s-%s.tsv' % (func_key, time_str),
-    dtype=float,
-    delimiter=','
-)
-
-plt.plot(np.linspace(1, 3000, 3000), np.vectorize(math.log10)(data.mean(axis=0)),
-         label='ABC-%s' % func_key)
-plt.title(func_key)
-plt.xlabel('gen')
-plt.ylabel('log10(%s)' % func_key)
-plt.legend()
-plt.savefig('./storages/graphs/m/ABC-%s-%s.png' % (func_key, time_str), dpi=1280)
-plt.show()
+# data = np.loadtxt(
+#     './storages/logs/m/ABC-%s-%s.tsv' % (func_key, time_str),
+#     dtype=float,
+#     delimiter=','
+# )
+#
+# plt.plot(np.linspace(1, 3000, 3000), np.vectorize(math.log10)(data.mean(axis=0)),
+#          label='ABC-%s' % func_key)
+# plt.title(func_key)
+# plt.xlabel('gen')
+# plt.ylabel('log10(%s)' % func_key)
+# plt.legend()
+# plt.savefig('./storages/graphs/m/ABC-%s-%s.png' % (func_key, time_str), dpi=1280)
+# plt.show()
