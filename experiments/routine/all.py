@@ -15,10 +15,10 @@ class CmdThread(threading.Thread):
 algorithms = [
     # 'ABC',
     # 'DE',
-    'GA',
-    'HRO',
+    # 'GA',
+    # 'HRO',
     'PRO',
-    'PSO'
+    # 'PSO'
 ]
 
 functions = ['f' + str(i) for i in range(1, 12)]

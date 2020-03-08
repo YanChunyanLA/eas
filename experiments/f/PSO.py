@@ -49,7 +49,7 @@ lowervs = np.array([-5] * n)
 # 开始
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 log_file = open(
-    './storages/logs/m/PSO-%s-%s.tsv' % (func_key, time_str),
+    './storages/logs/PSO-%s-%s.tsv' % (func_key, time_str),
     mode='ab')
 
 for i in range(times):
@@ -80,7 +80,7 @@ for i in range(times):
 log_file.close()
 
 # data = np.loadtxt(
-#     './storages/logs/m/PSO-%s-%s.tsv' % (func_key, time_str),
+#     './storages/logs/PSO-%s-%s.tsv' % (func_key, time_str),
 #     dtype=float,
 #     delimiter=','
 # )

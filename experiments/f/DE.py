@@ -46,7 +46,7 @@ lowerxs = np.array([-100] * n) # 向量各分量下限
 # 开始
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 log_file = open(
-    './storages/logs/m/DE-%s-%s.tsv' % (func_key, time_str),
+    './storages/logs/DE-%s-%s.tsv' % (func_key, time_str),
     mode='ab')
 
 for i in range(times):

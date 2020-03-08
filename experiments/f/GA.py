@@ -46,7 +46,7 @@ lowerxs = np.array([-100] * n)  # 向量各分量下限
 # 开始
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 log_file = open(
-    './storages/logs/m/GA-%s-%s.tsv' % (func_key, time_str),
+    './storages/logs/GA-%s-%s.tsv' % (func_key, time_str),
     mode='ab')
 
 for i in range(times):
@@ -71,11 +71,11 @@ for i in range(times):
 
 log_file.close()
 
-data = np.loadtxt(
-    './storages/logs/m/GA-%s-%s.tsv' % (func_key, time_str),
-    dtype=float,
-    delimiter=','
-)
+# data = np.loadtxt(
+#     './storages/logs/m/GA-%s-%s.tsv' % (func_key, time_str),
+#     dtype=float,
+#     delimiter=','
+# )
 
 # plt.plot(np.linspace(1, 3000, 3000), np.vectorize(math.log10)(data.mean(axis=0)),
 #          label='GA-%s' % func_key)

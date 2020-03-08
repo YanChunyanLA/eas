@@ -47,7 +47,7 @@ eas.TrialSolution.TRIAL_LIMIT = 8  # HRO 个体检验的最大次数
 # 开始
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 log_file = open(
-    './storages/logs/m/HRO-%s-%s.tsv' % (func_key, time_str),
+    './storages/logs/HRO-%s-%s.tsv' % (func_key, time_str),
     mode='ab')
 
 for i in range(times):
@@ -74,7 +74,7 @@ for i in range(times):
 log_file.close()
 
 # data = np.loadtxt(
-#     './storages/logs/m/HRO-%s-%s.tsv' % (func_key, time_str),
+#     './storages/logs/HRO-%s-%s.tsv' % (func_key, time_str),
 #     dtype=float,
 #     delimiter=','
 # )

@@ -30,7 +30,7 @@ func_key = sys.argv[1]
 
 # 常规参数项
 eas.log_flag = False  # 用于记录日志开关，当前记录信息
-times = 10  # 算法执行的总次数
+times = 2  # 算法执行的总次数
 gen = 3000  # 3000  # 一次算法的迭代次数
 _np = 60  # 60  # 总群个体的数量
 n = 10  # 10  # 解向量的维数
@@ -49,7 +49,7 @@ eas.LabelSolution.GEN = gen  # PRO 中解向量需要共享迭代数信息
 # 开始
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 log_file = open(
-    './storages/logs/m/PRO-%s-%s.tsv' % (func_key, time_str),
+    './storages/logs/PRO-%s-%s.tsv' % (func_key, time_str),
     mode='ab')
 
 for i in range(times):
@@ -80,7 +80,7 @@ for i in range(times):
 log_file.close()
 
 # data = np.loadtxt(
-#     './storages/logs/m/PRO-%s-%s.tsv' % (func_key, time_str),
+#     './storages/logs/PRO-%s-%s.tsv' % (func_key, time_str),
 #     dtype=float,
 #     delimiter=','
 # )

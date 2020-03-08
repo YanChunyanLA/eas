@@ -47,7 +47,7 @@ eas.TrialSolution.TRIAL_LIMIT = 8  # ABC 个体检验的最大次数
 # 开始
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 log_file = open(
-    './storages/logs/m/ABC-%s-%s.tsv' % (func_key, time_str),
+    './storages/logs/ABC-%s-%s.tsv' % (func_key, time_str),
     mode='ab')
 
 for i in range(times):
