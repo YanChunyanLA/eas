@@ -1,3 +1,8 @@
+# Usage
+# python graph.py {function} {log value}
+# example: python graph.py f1 6
+#       log value: default 10
+
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,6 +18,15 @@ algorithms = [
     'PSO',
     'PRO'
 ]
+line_styles = {
+    'ABC': 'dashed',
+    'DE': 'dotted',
+    'GA': 'dashdot',
+    'HRO': 'dotted',
+    'PSO': 'dashed',
+    'PRO': 'solid',
+}
+algo_styles = list(zip(algorithms, line_styles))
 
 functions = ['f' + str(i) for i in range(1, 12)]
 
@@ -33,18 +47,36 @@ if len(sys.argv) < 2 or sys.argv[1] not in log_files.keys():
     exit()
 
 func_key = sys.argv[1]
-raw_or_log10 = math.log10 if sys.argv[2] == '1' else lambda x: x
+
+
+def _log_func(base):
+    if base is None:
+        return lambda x: x
+    return lambda x: math.log(x, base)
+
+
+if str(sys.argv[2]).upper() == 'NONE':
+    base = None
+else:
+    base = int(sys.argv[2])
+
+log_func = _log_func(base)
 
 for (algo, file) in log_files[func_key].items():
     print(algo, file)
 
     data = np.loadtxt(log_dir + '/' + file, dtype=float, delimiter=',')
-    plt.plot(np.linspace(1, 3000, 3000), [raw_or_log10(v) for v in data.mean(axis=0)], label=algo)
+    plt.plot(
+        np.linspace(1, 3000, 3000),
+        [log_func(v) for v in data.mean(axis=0)],
+        linestyle=line_styles[algo],
+        label=algo)
 
 plt.title(func_key)
 plt.legend()
 plt.xlabel('gen')
-plt.ylabel('log10(%s)' % func_key)
+
+plt.ylabel('log%d(%s)' % (int(sys.argv[2]), func_key) if base is not None else 'f(x)')
 plt.savefig('%s/summary-%s-%s.png' %
             (graph_dir, func_key, time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))))
 plt.show()

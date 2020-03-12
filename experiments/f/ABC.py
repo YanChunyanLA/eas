@@ -30,7 +30,7 @@ func_key = sys.argv[1]
 
 # 常规参数项
 eas.log_flag = False  # 用于记录日志开关，当前记录信息
-times = 10 if len(sys.argv) <= 2 else int(sys.argv[2]) # 算法执行的总次数  TODO
+times = 50 if len(sys.argv) <= 2 else int(sys.argv[2]) # 算法执行的总次数  TODO
 gen = 3000  # 3000  # 一次算法的迭代次数
 _np = 60  # 60  # 总群个体的数量
 n = 10  # 10  # 解向量的维数

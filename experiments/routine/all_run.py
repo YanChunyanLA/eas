@@ -21,7 +21,8 @@ algorithms = [
     # 'PSO'
 ]
 
-functions = ['f' + str(i) for i in range(1, 12)]
+functions = ['f' + str(i) for i in range(4, 10)]
+# functions = ['f' + str(i) for i in [5, 6, 7, 8, 9]]
 cmds = reduce(lambda a, b: a + b, [list(map(lambda s: s + ' ' + f, map(lambda a: 'python experiments\\f\\' + a + '.py', algorithms))) for f in functions])
 
 cmds.sort()
