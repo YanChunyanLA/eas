@@ -4,7 +4,7 @@ import eas.factor
 import eas.boundary
 import eas.selection
 import numpy as np
-from eas import HRO
+from eas import HRA
 import matplotlib.pyplot as plt
 import math
 import sys
@@ -42,29 +42,23 @@ fitness_func = targets[func_key]
 # 参数项
 upperxs = np.array([100] * n) # 向量各分量上限
 lowerxs = np.array([-100] * n) # 向量各分量下限
-eas.TrialSolution.TRIAL_LIMIT = 60  # HRO 个体检验的最大次数
 
 # 开始
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 log_file = open(
-    './storages/logs/HRO-%s-%s.tsv' % (func_key, time_str),
+    './storages/logs/HRA-%s-%s.tsv' % (func_key, time_str),
     mode='ab')
 
 for i in range(times):
     print('round %d start: ' % (i + 1))
     # 由于因子有生成次数限制，所以需要在 times 循环体内重新创建
-    factors = {
-        'r1': eas.factor.RandomFactor([-1.0, 1.0], gen, n),
-        'r2': eas.factor.RandomFactor([-1.0, 1.0], gen, n),
-        'r3': eas.factor.RandomFactor([0.0, 1.0], gen, n),
-    }
 
-    algo = HRO(_np, n, upperxs, lowerxs,
-               factors=factors,
+    algo = HRA(_np, n, upperxs, lowerxs,
                optimal_minimal=True,
+               factors=None,
                fitness_func=fitness_func,
                boundary_strategy=boundary_strategy,
-               solution_class='TrialSolution')
+               solution_class='Solution')
 
     algo.fit(gen)
     np.savetxt(log_file, np.array(algo.best_fitness_store).T[np.newaxis], delimiter=',')

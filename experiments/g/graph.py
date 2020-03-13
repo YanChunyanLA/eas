@@ -11,12 +11,13 @@ import time
 import os
 
 algorithms = [
-    'ABC',
-    'DE',
-    'GA',
-    'HRO',
-    'PSO',
-    'PRO'
+    # 'ABC',
+    # 'DE',
+    # 'GA',
+    # 'HRO',
+    'HRA'
+    # 'PSO',
+    # 'PRO'
 ]
 line_styles = {
     'ABC': 'dashed',
@@ -25,10 +26,12 @@ line_styles = {
     'HRO': 'dotted',
     'PSO': 'dashed',
     'PRO': 'solid',
+    'HRA': 'solid'
 }
 algo_styles = list(zip(algorithms, line_styles))
 
 functions = ['f' + str(i) for i in range(1, 12)]
+functions = ['f' + str(i) for i in range(2, 3)]
 
 log_dir = './storages/logs'
 graph_dir = './storages/graphs'
@@ -39,6 +42,7 @@ log_files = {}
 for function in functions:
     log_files[function] = {}
     for algorithm in algorithms:
+        print(algorithm + '-' + function)
         log_files[function][algorithm] = list(filter(
             lambda filename: filename.startswith(algorithm + '-' + function),
             filenames))[0]
@@ -67,8 +71,8 @@ for (algo, file) in log_files[func_key].items():
 
     data = np.loadtxt(log_dir + '/' + file, dtype=float, delimiter=',')
     plt.plot(
-        np.linspace(1, 3000, 3000),
-        [log_func(v) for v in data.mean(axis=0)],
+        np.linspace(1, 10000, 10000),
+        [log_func(v) for v in data],
         linestyle=line_styles[algo],
         label=algo)
 

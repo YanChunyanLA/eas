@@ -7,4 +7,5 @@ from .PSO import PSO
 from .HRO import HRO
 from .GA import GA
 from .PRO import PRO
+from .HRA import HRA
 

@@ -138,3 +138,7 @@ def f11(xs):
     p1 = sum([x ** 2 for x in xs])
     p2 = helper.multiply([math.cos(x / math.sqrt(i + 2)) for i, x in enumerate(xs)])
     return 1.0 / 4000 * p1 - p2 + 1
+
+
+f12 = bent_cigar
+f13 = discus
