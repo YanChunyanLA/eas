@@ -95,6 +95,10 @@ class BaseEA(object):
         np.savetxt(self.log_file, np.append([], [fitness], axis=0)[np.newaxis], delimiter=',')
 
     def compare(self, s, trial):
+        """
+        返回 1 表示新生成个体优
+        返回 -1 表示原个体优
+        """
         f = s.apply_fitness_func(self.fitness_func)
         tf = trial.apply_fitness_func(self.fitness_func)
 

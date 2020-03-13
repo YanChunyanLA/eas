@@ -14,8 +14,8 @@ algorithms = [
     # 'ABC',
     # 'DE',
     # 'GA',
-    # 'HRO',
-    'HRA'
+    'HRO',
+    # 'HRA'
     # 'PSO',
     # 'PRO'
 ]
@@ -31,7 +31,7 @@ line_styles = {
 algo_styles = list(zip(algorithms, line_styles))
 
 functions = ['f' + str(i) for i in range(1, 12)]
-functions = ['f' + str(i) for i in range(2, 3)]
+functions = ['f' + str(i) for i in range(1, 2)]
 
 log_dir = './storages/logs'
 graph_dir = './storages/graphs'

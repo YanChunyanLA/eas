@@ -45,9 +45,9 @@ class HRA(BaseEA):
                 # 比较适应值，将较优的留下
                 self.solutions[a_index], lost = self.compare(self.solutions[a_index], trial_solution)
 
-                # lost == 0 表示新生成个体次于原个体
+                # lost == -1 表示新生成个体次于原个体
                 # 按公式（3）进行更新
-                if lost == 0:
+                if lost == -1:
                     a_fitness = self.solutions[a_index].apply_fitness_func(self.fitness_func)
                     b_fitness = self.solutions[random_b_index].apply_fitness_func(self.fitness_func)
 

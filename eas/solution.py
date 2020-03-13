@@ -52,6 +52,9 @@ class Solution(object):
     def amend_vector(self, upperxs, lowerxs, boundary_strategy=Boundary.BOUNDARY):
         self.vector = Boundary.make_strategy(boundary_strategy)(self.vector, upperxs, lowerxs)
 
+    def amend_component(self, cindex, upperx, lowerx, boundary_strategy=Boundary.BOUNDARY):
+        self.vector[cindex] = Boundary.make_c_strategy(boundary_strategy)(self.vector[cindex], upperx, lowerx)
+
 
 class TrialSolution(Solution):
     TRIAL_LIMIT = 8

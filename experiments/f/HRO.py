@@ -42,7 +42,7 @@ fitness_func = targets[func_key]
 # 参数项
 upperxs = np.array([100] * n) # 向量各分量上限
 lowerxs = np.array([-100] * n) # 向量各分量下限
-eas.TrialSolution.TRIAL_LIMIT = 60  # HRO 个体检验的最大次数
+eas.TrialSolution.TRIAL_LIMIT = 8  # HRO 个体检验的最大次数
 
 # 开始
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))

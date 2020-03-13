@@ -1,4 +1,5 @@
 from eas import BaseEA, selection
+import random
 
 
 # paper
@@ -38,33 +39,31 @@ class HRO(BaseEA):
             self.renewal_stage()
 
     def hybridization_stage(self):
-        factors = {
-            'r1': self.factors['r1'].next(),
-            'r2': self.factors['r2'].next(),
-        }
-
         for i in range(2 * self.group_size, self.np):
-            sterile_index = selection.random(2 * self.group_size, self.np, size=1, excludes=[i])
-            maintainer_index = selection.random(0, self.group_size, size=1)
-
             trial_solution = self.create_solution(all_zero=True)
-            trial_solution.vector = (factors['r1'] * self.solutions[sterile_index].vector + factors['r2'] * self.solutions[maintainer_index].vector) / (factors['r1'] + factors['r2'])
+            for j in range(self.n):
+                r1 = random.random()
+                r2 = random.random()
+                sterile_index = selection.random(2 * self.group_size, self.np, size=1, excludes=[i])
+                maintainer_index = selection.random(0, self.group_size, size=1)
 
-            trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
+                trial_solution.vector[j] = (r1 * self.solutions[sterile_index].vector[j] + r2 * self.solutions[maintainer_index].vector[j]) / \
+                                           (r1 + r2)
+                trial_solution.amend_component(j, self.upperxs[j], self.lowerxs[j], boundary_strategy=self.boundary_strategy)
 
             self.solutions[i], lost = self.compare(self.solutions[i], trial_solution)
             if lost == -1:
                 self.solutions[i].trial_increase()
 
     def selfing_stage(self):
-        factor = self.factors['r3'].next()
         for i in range(self.group_size, 2 * self.group_size):
-            restorer_index = selection.random(self.group_size, 2 * self.group_size, size=1, excludes=[i])
-            
             trial_solution = self.solution_factory.create(self.solution_class, all_zero=True)
-            trial_solution.vector = factor * (self.solutions[0].vector - self.solutions[restorer_index].vector) + self.solutions[i].vector
+            for j in range(self.n):
+                restorer_index = selection.random(self.group_size, 2 * self.group_size, size=1, excludes=[i])
+                r3 = random.random()
+                trial_solution.vector[j] = r3 * (self.solutions[0].vector[j] - self.solutions[restorer_index].vector[j]) + self.solutions[i].vector[j]
+                trial_solution.amend_component(j, self.upperxs[j], self.lowerxs[j], boundary_strategy=self.boundary_strategy)
 
-            trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
             self.solutions[i], _ = self.compare(self.solutions[i], trial_solution)
 
     def renewal_stage(self):
