@@ -68,5 +68,9 @@ class HRO(BaseEA):
 
     def renewal_stage(self):
         for i in range(self.group_size, 2 * self.group_size):
+            trial_solution = self.solution_factory.create(self.solution_class, all_zero=True)
             if self.solutions[i].is_exceed_trial():
-                self.solutions[i] = self.solution_factory.create(self.solution_class)
+                for j in range(self.n):
+                    trial_solution.vector[j] = trial_solution.vector[j] + (1 + random.random()) * (self.upperxs[j] - self.lowerxs[j])
+                    trial_solution.amend_component(j, self.upperxs[j], self.lowerxs[j], boundary_strategy=self.boundary_strategy)
+            self.solutions[i], _ = self.compare(self.solutions[i], trial_solution)
