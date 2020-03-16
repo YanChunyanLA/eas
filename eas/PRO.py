@@ -1,5 +1,6 @@
 from .base import BaseEA
 from eas import selection
+# from eas.collection import Collection
 import random
 
 
@@ -8,12 +9,6 @@ class PRO(BaseEA):
         BaseEA.__init__(self, _np, n, upperxs, lowerxs, factors, **kwargs)
         self.label_size = label_size
         self.group_size = int(self.np / self.label_size)
-
-    def get_factor_keys(self):
-        return [
-            'r1',
-            'r2',
-        ]
 
     def fit(self, gen):
         for i in range(gen):
@@ -35,9 +30,6 @@ class PRO(BaseEA):
         if not self.optimal_minimal:
             self.solutions.reverse()
 
-        # 用于得到传入的因子对象
-        factors = self.get_factors()
-
         # 对所有可能解进行评级操作
         for i in range(self.label_size):
             for j in range(self.group_size):
@@ -45,16 +37,18 @@ class PRO(BaseEA):
                 self.solutions[index].add_label(i)
 
                 if self.solutions[index].should_be_fired():
-                    s_index = selection.random(0, self.group_size, size=1, excludes=[index])
-                    a_index = selection.random(self.group_size, self.group_size * 2, size=1, excludes=[index])
+                    trial_solutionn = self.create_solution(all_zero=True)
+                    for k in range(self.n):
+                        r1 = random.random()
+                        r2 = random.random()
+                        s_index = selection.random(0, self.group_size, size=1, excludes=[index])
+                        a_index = selection.random(self.group_size, self.group_size * 2, size=1, excludes=[index])
 
-                    new_solution = self.create_solution(all_zero=True)
-                    new_solution.vector = (factors['r1'] * self.solutions[s_index].vector + factors['r2'] * self.solutions[a_index].vector) / (factors['r1'] + factors['r2'])
-                    new_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
-                    new_solution.change_vector(new_solution.vector, mean=True, gen=gen)
+                        trial_solutionn.vector[k] = (r1 * self.solutions[s_index].vector[k] + r2 * self.solutions[a_index].vector[k]) / (r1 + r2)
+                        trial_solutionn.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
+                        trial_solutionn.change_vector(trial_solutionn.vector, mean=True, gen=gen)
 
-                    self.solutions[index] = new_solution
-
+                    self.solutions[index] = trial_solutionn
 
     def learn_stage(self, gen):
         """学习阶段，组间学习
@@ -65,21 +59,19 @@ class PRO(BaseEA):
                 index = i * self.group_size + j
                 # 选中的组下标
                 group_index = selection.random(0, self.label_size, size=1, excludes=[i])
-                # 需要从选中组中随机抽取两个个体
-                s1, s2 = selection.random(
-                    group_index * self.group_size,
-                    (group_index + 1) * self.group_size, size=2
-                )
                 # 对新生成的解向量进行验证
                 # 如果适应值适于原先的，则进行替换
                 trial_solution = self.create_solution(all_zero=True)
 
                 rate = self.solutions[index].get_learn_rate(gen)
                 for k in range(self.n):
+                    # 需要从选中组中随机抽取两个个体
+                    s1, s2 = selection.random(
+                        group_index * self.group_size,
+                        (group_index + 1) * self.group_size, size=2
+                    )
                     trial_solution.vector[k] = self.solutions[index].vector[k] + \
                                                 rate * (self.solutions[s1].vector[k] - self.solutions[s2].vector[k])
-
-                # trial_solution.vector = self.solutions[index].vector + self.solutions[index].get_learn_rate(gen) * (self.solutions[s1].vector - self.solutions[s2].vector)
 
                 trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
                 # 传入 mean=True 的函数在于：改变解向量的同时记录之前个体的解向量的平均值（各分量的平均值）
@@ -88,9 +80,7 @@ class PRO(BaseEA):
                 self.solutions[index], _ = self.compare(self.solutions[index], trial_solution)
 
     def promote_stage(self, gen):
-        """提升阶段: 自我学习
-        """
-
+        """提升阶段: 自我学习"""
         for i in range(self.np):
             # 在 PRO 中，每个解向量自身会有一个随机的学习率
             # 按迭代次数的增加向降低

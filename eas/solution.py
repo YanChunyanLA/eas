@@ -81,7 +81,7 @@ class LabelSolution(Solution):
         Solution.__init__(self, vector)
         self.labels = []
         self.learn_rate = random.random()
-        self.seed = random.choice(np.linspace(0.1, 0.8, LabelSolution.LABEL_SIZE))
+        self.seed = random.choice(np.linspace(0.4, 0.8, LabelSolution.LABEL_SIZE))
 
     def get_current_label(self):
         """at each iteration, instances of Label should invoke this method to 

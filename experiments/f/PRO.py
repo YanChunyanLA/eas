@@ -30,8 +30,8 @@ func_key = sys.argv[1]
 
 # 常规参数项
 eas.log_flag = False  # 用于记录日志开关，当前记录信息
-times = 50  # 算法执行的总次数
-gen = 3000  # 3000  # 一次算法的迭代次数
+times = 1  # 算法执行的总次数
+gen = 5000  # 3000  # 一次算法的迭代次数
 _np = 60  # 60  # 总群个体的数量
 n = 10  # 10  # 解向量的维数
 # 向量越界策略
@@ -55,18 +55,10 @@ log_file = open(
 for i in range(times):
     print('round %d start: ' % (i + 1))
     # 由于因子有生成次数限制，所以需要在 times 循环体内重新创建
-    factors = {
-        # r1 r2 分别为在 rating_phase 使用到的两个因子
-        # 每一次迭代中返回 [-1.0, 1.0] 区间的随机数
-        'r1': eas.factor.RandomMatrixFactor([-1, 1.0], gen, n),
-        'r2': eas.factor.RandomMatrixFactor([-1, 1.0], gen, n),
-        # 'r1': eas.factor.RandomFactor([0, 1.0], gen),
-        # 'r2': eas.factor.RandomFactor([0, 1.0], gen),
-    }
 
     algo = PRO(_np, n, upperxs, lowerxs,
                label_size=ls,
-               factors=factors,
+               factors=None,
                optimal_minimal=True,
                fitness_func=fitness_func,
                boundary_strategy=boundary_strategy,

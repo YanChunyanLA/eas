@@ -25,7 +25,7 @@ def multiply(xs):
 
 def init_vector(n, upperxs, lowerxs):
     random_diag = np.diag(np.random.uniform(0, 1, n))
-    vector = lowerxs + np.matmul(random_diag, upperxs - lowerxs)
+    vector = np.add(lowerxs, np.matmul(random_diag, np.subtract(upperxs, lowerxs)))
     return vector
 
 
