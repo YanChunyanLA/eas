@@ -1,46 +1,46 @@
 import random
 
 
-def _boundary_strategy(vector, upperxs, lowerxs):
+def _boundary_strategy(vector, us, ls):
     for i, _ in enumerate(vector):
-        if vector[i] > upperxs[i]:
-            vector[i] = upperxs[i]
-        if vector[i] < lowerxs[i]:
-            vector[i] = lowerxs[i]
+        if vector[i] > us[i]:
+            vector[i] = us[i]
+        if vector[i] < ls[i]:
+            vector[i] = ls[i]
     return vector
 
 
-def _c_boundary_strategy(c, upperx, lowerx):
-    if c > upperx:
-        return upperx
-    if c < lowerx:
-        return lowerx
+def _c_boundary_strategy(c, u, l):
+    if c > u:
+        return u
+    if c < l:
+        return l
     return c
 
 
-def _middle_strategy(vector, upperxs, lowerxs):
+def _middle_strategy(vector, us, ls):
     for i, _ in enumerate(vector):
-        if vector[i] > upperxs[i] or vector[i] < lowerxs[i]:
-            vector[i] = (upperxs[i] + lowerxs[i]) / 2.0
+        if vector[i] > us[i] or vector[i] < ls[i]:
+            vector[i] = (us[i] + ls[i]) / 2.0
     return vector
 
 
-def _c_middle_strategy(c, upperx, lowerx):
-    if c > upperx or c < lowerx:
-        c = (upperx + lowerx) / 2.0
+def _c_middle_strategy(c, u, l):
+    if c > u or c < l:
+        c = (u + l) / 2.0
     return c
 
 
-def _random_strategy(vector, upperxs, lowerxs):
+def _random_strategy(vector, us, ls):
     for i, _ in enumerate(vector):
-        if vector[i] > upperxs[i] or vector[i] < lowerxs[i]:
-            vector[i] = lowerxs[i] + random.random() * (upperxs[i] - lowerxs[i])
+        if vector[i] > us[i] or vector[i] < ls[i]:
+            vector[i] = ls[i] + random.random() * (us[i] - ls[i])
     return vector
 
 
-def _c_random_strategy(c, upperx, lowerx):
-    if c > upperx or c < lowerx:
-        c = lowerx + random.random() * (upperx - lowerx)
+def _c_random_strategy(c, u, l):
+    if c > u or c < l:
+        c = l + random.random() * (u - l)
     return c
 
 

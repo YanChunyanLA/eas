@@ -53,7 +53,7 @@ class ABC(BaseEA):
                 self.solutions[i].trial_increase()
 
     def onlooker_stage(self, gen):
-        fitness_list = np.array([s.apply_fitness_func(self.fitness_func) for s in self.solutions])
+        fitness_list = np.array([s.apply_fitness_func(self.ff) for s in self.solutions])
         fitness_sum = sum(fitness_list)
         probabilities = fitness_list / fitness_sum
         r_factor = self.factors['r2'].next()

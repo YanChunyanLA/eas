@@ -39,8 +39,8 @@ class PSO(BaseEA):
                 self.solutions[j].p_vector = self.compare(self.solutions[j].p_vector, self.solutions[j].vector)
 
     def compare(self, v1, v2):
-        f1 = self.fitness_func(v1)
-        f2 = self.fitness_func(v2)
+        f1 = self.ff(v1)
+        f2 = self.ff(v2)
 
         if (self.optimal_minimal and f1 < f2) or (not self.optimal_minimal and f1 > f2):
             return v1

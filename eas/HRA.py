@@ -48,8 +48,8 @@ class HRA(BaseEA):
                 # lost == -1 表示新生成个体次于原个体
                 # 按公式（3）进行更新
                 if lost == -1:
-                    a_fitness = self.solutions[a_index].apply_fitness_func(self.fitness_func)
-                    b_fitness = self.solutions[random_b_index].apply_fitness_func(self.fitness_func)
+                    a_fitness = self.solutions[a_index].apply_fitness_func(self.ff)
+                    b_fitness = self.solutions[random_b_index].apply_fitness_func(self.ff)
 
                     if (self.optimal_minimal and a_fitness < b_fitness) or (
                             not self.optimal_minimal and a_fitness > b_fitness): # a 优于 b

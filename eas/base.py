@@ -19,14 +19,14 @@ class BaseEA(object):
         # 目标函数最优求解是否为最小值，True 最小，False 最大
         self.optimal_minimal = kwargs.get('optimal_minimal', True)
         self.boundary_strategy = kwargs.get('boundary_strategy', Boundary.BOUNDARY)
-        # fitness_func就是最终需要求取的函数，或者说是优化的问题
-        self.fitness_func = kwargs.get('fitness_func', lambda xs: None)
+        # ff 就是最终需要求取的函数，或者说是优化的问题
+        self.ff = kwargs.get('fitness_func', lambda xs: None)
 
         # 第一次对所有的解的可行位置进行初始化，初始化一个解的工厂
         self.solution_factory = SolutionFactory(self.n, self.upperxs, self.lowerxs)  # TODO
         self.solution_class = kwargs.get('solution_class', 'Solution')
 
-        helper.must_callable(self.fitness_func)
+        helper.must_callable(self.ff)
 
         # 对种群中的每一个的个体进行初始化
         self.solutions = [self.create_solution() for _ in range(self.np)]
@@ -45,7 +45,7 @@ class BaseEA(object):
 
     def set_fitness_func(self, fitness_func):
         helper.must_callable(fitness_func)
-        self.fitness_func = fitness_func
+        self.ff = fitness_func
 
     def set_log_file(self, log_file):
         self.log_file = log_file
@@ -69,7 +69,7 @@ class BaseEA(object):
         存入 self.best_fitness_store 列表中
         """
         # 计算每个可行解的fitness
-        self.current_fitness_store = [s.apply_fitness_func(self.fitness_func) for s in self.solutions]
+        self.current_fitness_store = [s.apply_fitness_func(self.ff) for s in self.solutions]
         # 根据输入的是最大值还是最小值，取最优值
         fitness = min(self.current_fitness_store) if self.optimal_minimal else max(self.current_fitness_store)
         # 获得最优值的下标
@@ -95,12 +95,9 @@ class BaseEA(object):
         np.savetxt(self.log_file, np.append([], [fitness], axis=0)[np.newaxis], delimiter=',')
 
     def compare(self, s, trial):
-        """
-        返回 1 表示新生成个体优
-        返回 -1 表示原个体优
-        """
-        f = s.apply_fitness_func(self.fitness_func)
-        tf = trial.apply_fitness_func(self.fitness_func)
+        """返回 1 表示新生成个体优，返回 -1 表示原个体优"""
+        f = s.apply_fitness_func(self.ff)
+        tf = trial.apply_fitness_func(self.ff)
 
         if (self.optimal_minimal and tf < f) or (
                 not self.optimal_minimal and tf > f):

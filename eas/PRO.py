@@ -23,7 +23,7 @@ class PRO(BaseEA):
 
         # 按照 fitness 对可行解集合中的元素进行排序
         # 从小到大
-        self.solutions.sort(key=lambda s: s.apply_fitness_func(self.fitness_func))
+        self.solutions.sort(key=lambda s: s.apply_fitness_func(self.ff))
 
         # 如果目标函数为求最大值，则对集合元素进行反转
         # 最终结果为从大到小

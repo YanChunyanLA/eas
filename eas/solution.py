@@ -7,13 +7,13 @@ import random, math
 class SolutionFactory(object):
     def __init__(self, n, upperxs, lowerxs, **kwargs):
         self.n = n
-        self.upperxs = upperxs
-        self.lowerxs = lowerxs
+        self.us = upperxs
+        self.ls = lowerxs
         self.kwargs = kwargs
 
     def create(self, class_str, all_zero=False):
         # 对可行解进行初始化
-        vector = np.zeros(self.n) if all_zero else helper.init_vector(self.n, self.upperxs, self.lowerxs)
+        vector = np.zeros(self.n) if all_zero else helper.init_vector(self.n, self.us, self.ls)
         _class = Solution
         if class_str == 'TrialSolution':
             _class = TrialSolution
@@ -32,8 +32,8 @@ class Solution(object):
         self.fitness = None
 
     @staticmethod
-    def create(n, upperxs, lowerxs):
-        return Solution(helper.init_vector(n, upperxs, lowerxs))
+    def create(n, us, ls):
+        return Solution(helper.init_vector(n, us, ls))
 
     @staticmethod
     def zeros(n):
@@ -49,11 +49,11 @@ class Solution(object):
         if mean:
             self.mean_vector = (self.mean_vector * gen + self.vector) / (gen + 1)
 
-    def amend_vector(self, upperxs, lowerxs, boundary_strategy=Boundary.BOUNDARY):
-        self.vector = Boundary.make_strategy(boundary_strategy)(self.vector, upperxs, lowerxs)
+    def amend_vector(self, us, ls, boundary_strategy=Boundary.BOUNDARY):
+        self.vector = Boundary.make_strategy(boundary_strategy)(self.vector, us, ls)
 
-    def amend_component(self, cindex, upperx, lowerx, boundary_strategy=Boundary.BOUNDARY):
-        self.vector[cindex] = Boundary.make_c_strategy(boundary_strategy)(self.vector[cindex], upperx, lowerx)
+    def amend_component(self, cindex, u, l, boundary_strategy=Boundary.BOUNDARY):
+        self.vector[cindex] = Boundary.make_c_strategy(boundary_strategy)(self.vector[cindex], u, l)
 
 
 class TrialSolution(Solution):

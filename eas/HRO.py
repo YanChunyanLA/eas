@@ -29,7 +29,7 @@ class HRO(BaseEA):
 
             # sort
             # maintainer restorer sterile
-            self.solutions.sort(key=lambda s: s.apply_fitness_func(self.fitness_func))
+            self.solutions.sort(key=lambda s: s.apply_fitness_func(self.ff))
 
             if not self.optimal_minimal:
                 self.solutions.reverse()

@@ -23,9 +23,10 @@ def multiply(xs):
     return xs[0] * multiply(xs[1:])
 
 
-def init_vector(n, upperxs, lowerxs):
+def init_vector(n: int, us, ls) -> np.ndarray:
+    """生成指定区间内的随机解"""
     random_diag = np.diag(np.random.uniform(0, 1, n))
-    vector = np.add(lowerxs, np.matmul(random_diag, np.subtract(upperxs, lowerxs)))
+    vector = np.add(ls, np.matmul(random_diag, np.subtract(us, ls)))
     return vector
 
 
