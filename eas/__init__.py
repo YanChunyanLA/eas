@@ -9,4 +9,5 @@ from .GA import GA
 from .PRO import PRO
 from .HRA import HRA
 from .BOA import BOA
+from .BHRO import BHRO
 
