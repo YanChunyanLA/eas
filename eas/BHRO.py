@@ -3,7 +3,7 @@
 # @Author: a2htray
 # @File : BHRO.py
 # @desc: HRO 算法的二进制版本
-import random
+
 import numpy as np
 import copy
 

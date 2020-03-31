@@ -8,10 +8,12 @@ from sklearn.datasets import \
     load_breast_cancer, load_wine, load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
+from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 
 german_data = np.loadtxt('./dataset/german.data-numeric')
 australian_data = np.loadtxt('./dataset/australian.dat')
+
 
 dataset = {
     'australian': (australian_data[:,0:-1], australian_data[:,-1]),
@@ -27,6 +29,16 @@ for key in dataset.keys():
     dataset[key] = {
         'XY': dataset[key],
         'dimensionNum': dimensions[key],
+    }
+
+# 数据的预处理
+keys = list(dataset.keys())
+for key in keys:
+    scaler = MinMaxScaler()
+    scaler.fit(dataset[key]['XY'][0])
+    dataset['after_preprocess_' + key] = {
+        'XY': (scaler.transform(dataset[key]['XY'][0]), dataset[key]['XY'][1]),
+        'dimensionNum': dataset[key]['dimensionNum'],
     }
 
 random_state = 42
@@ -49,4 +61,4 @@ for key in dataset.keys():
     ea.fit(gen)
 
     print('-- %s' % key)
-    print(ea.accuracies)
+    print(ea.accuracies, ea.bsc[0])
