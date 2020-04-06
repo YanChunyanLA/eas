@@ -1,49 +1,41 @@
-import time
-import numpy as np
-from eas import PRO, selection, LabelSolution, target
-from eas.factor import RandomFactor
-from eas.boundary import Boundary
+# -*- coding:utf-8 -*-
+# @Time : 2020/4/2 10:01
+# @Author : a2htray
+# @File : PRO.py
+# @Desc : DESC
+
+from eas import PRO
+import sys
+from eas.target import fs
 import matplotlib.pyplot as plt
-import math
+from math import log10
+import pandas as pd
+import numpy as np
 
-time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
+random_state = 42
+_np = 60  # 种群个数
+n = 10
+max_gen = 500
 
-# eas.log_flag = True
+ea = PRO(_np, n, [100] * n, [-100] * n,
+         max_gen=max_gen,
+         gnum=3,
+         nc=8,
+         procedure=fs[sys.argv[1]],
+         random_state=random_state)
+# print("==== initial solutions ====")
+# print(ea.sc)
+# print('==== learn rate seeds ====')
+# print(ea.learn_rate_seeds)
+# print('==== mean solutions ====')
+# print(ea.mean_solutions)
+ea.fit()
+print('==== after ea.fit() ====')
+df = pd.DataFrame(
+    np.column_stack((ea.fc, ea.assess_record, ea.sc, ea.mean_solutions)),
+    columns=['fv', 'nc'] + ['x' + str(i+1) for i in range(n)] + ['mean_x' + str(i+1) for i in range(n)])
+print(df)
 
-log_file = open(
-    './storages/logs/PRO-target-function-01-%s.tsv' % time_str,
-    mode='ab')
-
-NP = 60
-N = 4
-U = np.array([100] * N)
-L = np.array([-100] * N)
-GEN = 3000
-NC = 3
-
-factors = {
-    'r1': RandomFactor([-1.0, 1.0], GEN, N),
-    'r2': RandomFactor([-1.0, 1.0], GEN, N),
-}
-
-LabelSolution.LABEL_SIZE = NC
-LabelSolution.GEN = GEN
-
-pro = PRO(NP, N, U, L, NC, factors,
-          optimal_minimal=True,
-          fitness_func=target.bent_cigar,
-          boundary_strategy=Boundary.BOUNDARY,
-          solution_class='LabelSolution')
-
-pro.register_strategy('selection', selection.random)
-
-pro.fit(GEN)
-
-# 画图操作
-plt.plot(np.arange(1, GEN + 1), [math.log(v) for v in pro.best_fitness_store])
-# plt.plot(np.linspace(1, GEN, num=GEN), [v for v in pro.best_fitness_store])
-plt.xlabel('Gen')
-plt.ylabel('log(f(x))')
-plt.savefig('./storages/graphs/PRO-target-function-01-r1[-1--1]-r2[-1--1]-%s.png' % time_str)
+fig, ax = plt.subplots(1, 1)
+ax.plot([log10(x) for x in ea.hbsc], 'r')
 plt.show()
-

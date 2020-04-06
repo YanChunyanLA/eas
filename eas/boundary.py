@@ -1,12 +1,11 @@
 import random
 
-
-def _boundary_strategy(vector, us, ls):
+def _boundary_strategy(vector, ub, lb):
     for i, _ in enumerate(vector):
-        if vector[i] > us[i]:
-            vector[i] = us[i]
-        if vector[i] < ls[i]:
-            vector[i] = ls[i]
+        if vector[i] > ub[i]:
+            vector[i] = ub[i]
+        if vector[i] < lb[i]:
+            vector[i] = lb[i]
     return vector
 
 
@@ -18,10 +17,10 @@ def _c_boundary_strategy(c, u, l):
     return c
 
 
-def _middle_strategy(vector, us, ls):
+def _middle_strategy(vector, ub, lb):
     for i, _ in enumerate(vector):
-        if vector[i] > us[i] or vector[i] < ls[i]:
-            vector[i] = (us[i] + ls[i]) / 2.0
+        if vector[i] > ub[i] or vector[i] < lb[i]:
+            vector[i] = (ub[i] + lb[i]) / 2.0
     return vector
 
 
@@ -31,10 +30,10 @@ def _c_middle_strategy(c, u, l):
     return c
 
 
-def _random_strategy(vector, us, ls):
+def _random_strategy(vector, ub, lb):
     for i, _ in enumerate(vector):
-        if vector[i] > us[i] or vector[i] < ls[i]:
-            vector[i] = ls[i] + random.random() * (us[i] - ls[i])
+        if vector[i] > ub[i] or vector[i] < lb[i]:
+            vector[i] = lb[i] + random.random() * (ub[i] - lb[i])
     return vector
 
 

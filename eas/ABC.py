@@ -1,86 +1,69 @@
-from eas import helper, TrialSolution, BaseEA, selection
 import numpy as np
-import random
+from eas import EA
+from eas.helper import init_vector
+from copy import deepcopy
 
 
 # paper
-# Karaboga, Dervis, and Bahriye Basturk. "A powerful and efficient algorithm 
+# Karaboga, Dervis, and Bahriye Basturk. "A powerful and efficient algorithm
 # for numerical function optimization: artificial bee colony (ABC) algorithm.
 # " Journal of global optimization 39.3 (2007): 459-471.
-class ABC(BaseEA):
-    def __init__(self, _np, n, upperxs, lowerxs, factors, **kwargs):
-        BaseEA.__init__(self, _np, n, upperxs, lowerxs, factors, **kwargs)
-        BaseEA.check_factors(self)
+class ABC(EA):
+    def __init__(self,  *args, nc: int = 8,**kwargs):
+        super(ABC, self).__init__(*args, **kwargs)
+        # 试验的最大次数
+        self.nc = nc
+        # 一维向量，记录各个解向量已试验的次数
+        self.ncs = np.zeros(self.np)
 
-    def get_factor_keys(self):
-        return [
-            'r1',
-            'r2',
-        ]
+    def sort(self):
+        flag = 1 if self.optimal_minimal else -1
+        self.fc = self.equip_procedure_all()
+        tmp = np.column_stack((self.sc, self.ncs, self.fc))
+        self.sc, self.ncs, self.fc = np.split(tmp[np.argsort(flag * tmp[:, -1])], [-2,-1], axis=1)
 
-    def get_exceeded_trials(self):
-        """返回试验次数等于阈值的个体下标
-        """
-        return [k for k, s in enumerate(self.solutions)
-                if s.trial == TrialSolution.TRIAL_LIMIT]
+    def run(self, g):
+        self.employee_stage(g)
+        self.onlooker_stage(g)
+        self.scouter_stage(g)
 
-    def fit(self, gen):
-        for g in range(gen):
-            self.append_best_fitness()
-
-            self.employee_stage(g)
-            self.onlooker_stage(g)
-            self.scouter_stage(g)
-
-    def employee_stage(self, gen):
-        r_factor = self.factors['r1'].next()
-        is_matrix_factor = BaseEA.is_matrix_factor(self.factors['r1'])
-
+    def employee_stage(self, g):
         for i in range(self.np):
-            # 选择的个体下标
-            selected_index = selection.random(0, self.np, size=1, excludes=[i])
-            selected_solution = self.solutions[selected_index]
+            for j in range(self.n):
+                s_copy = deepcopy(self.sc[i])
+                # r1 random number between [−1, 1]
+                r1 = 1 - 2 * np.random.random()
+                # Although
+                # si is determined randomly, it has to be different from i.
+                si = np.random.choice([x for x in range(self.np) if x != i])
+                s_copy[j] = s_copy[j] + r1 * (s_copy[j] - self.sc[si][j])
+                # In this work, the value of the parameter
+                # exceeding its limit is set to its limit value.
+                s_copy = self.bs(s_copy, self.ub, self.lb)
 
-            trial_solution = self.create_solution(all_zero=True)
-            trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_matrix_factor, r_factor, selected_solution.vector)
-            trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
+                if self.better_than(i, s_copy):  # 原先的好
+                    self.ncs[i] += 1
+                else:  # 新生的好
+                    self.sc[i] = s_copy
+                    self.ncs[i] = 0
 
-            self.solutions[i], lost = self.compare(self.solutions[i], trial_solution)
-
-            if lost == 1:
-                self.solutions[i].trial_zero()
-            else:
-                self.solutions[i].trial_increase()
-
-    def onlooker_stage(self, gen):
-        fitness_list = np.array([s.apply_fitness_func(self.ff) for s in self.solutions])
-        fitness_sum = sum(fitness_list)
-        probabilities = fitness_list / fitness_sum
-        r_factor = self.factors['r2'].next()
-
-        is_matrix_factor = BaseEA.is_matrix_factor(self.factors['r2'])
-
+    def onlooker_stage(self, g):
+        ps = self.get_probabilities()
         for i in range(self.np):
-            # protect the original probabilities
-            temp_probabilities = probabilities.copy()
-            temp_probabilities[i] = 0
+            for j in range(self.n):
+                s_copy = deepcopy(self.sc[i])
+                r2 = 1 - 2 * np.random.random()
+                si = np.random.choice(list(range(self.np)), p=ps)
+                s_copy[j] = s_copy[j] + r2 * (s_copy[j] - self.sc[si][j])
+                s_copy = self.bs(s_copy, self.ub, self.lb)
+                if self.better_than(i, s_copy):  # 原先的好
+                    self.ncs[i] += 1
+                else:  # 新生的好
+                    self.sc[i] = s_copy
+                    self.ncs[i] = 0
 
-            selected_index = random.choices(list(range(self.np)), temp_probabilities)[0]
-            selected_solution = self.solutions[selected_index]
-
-            trial_solution = self.create_solution(all_zero=True)
-            trial_solution.vector = self.solutions[i].vector + helper.factor_multiply(is_matrix_factor, r_factor, selected_solution.vector)
-            trial_solution.amend_vector(self.upperxs, self.lowerxs, boundary_strategy=self.boundary_strategy)
-
-            self.solutions[i], lost = self.compare(self.solutions[i], trial_solution)
-
-            if lost == 1:
-                self.solutions[i].trial_zero()
-            else:
-                self.solutions[i].trial_increase()
-
-    def scouter_stage(self, gen):
-        indexes = self.get_exceeded_trials()
-        if len(indexes) != 0:
-            for i in indexes:
-                self.solutions[i] = self.solution_factory.create(self.solution_class)
+    def scouter_stage(self, g):
+        for i, nc in enumerate(self.ncs.flatten().astype(int)):
+            if nc >= self.nc:
+                self.sc[i] = init_vector(self.n, self.ub, self.lb)
+                self.ncs[i] = 0

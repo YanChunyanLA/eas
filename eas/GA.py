@@ -1,90 +1,59 @@
-from .base import BaseEA
-import random
-import copy
+from eas import EA
+import numpy as np
+from math import floor
+from copy import deepcopy
 
 
-class GA(BaseEA):
-    def __init__(self, _np, n, upperxs, lowerxs, factors, **kwargs):
-        BaseEA.__init__(self, _np, n, upperxs, lowerxs, factors, **kwargs)
-        BaseEA.check_factors(self)
+class GA(EA):
+    def __init__(self, *args, **kwargs):
+        super(GA, self).__init__(*args, **kwargs)
+        self.fappend = False
+        self.fsort = False
 
-    def get_factor_keys(self):
-        return [
-            'cr',
-            'al'
-        ]
+        self.mrg = lambda cg: 0.9 - 0.9 * cg / self.max_gen
+        self.crg = lambda cg: 0.3
+        self.per = 0.4
+        self.best_i = 0
+        self.best_s = 0
+        self.best_f = 0
 
-    def fit(self, gen):
-        # 算法的主体内容
-        for i in range(gen):
-            # 计算fitness，并且进行记录
-            self.append_best_fitness()
-            # 根据轮盘赌算子对种群中的个体进行选择
-            self.roulette()
-            # 变异
-            self.mutation(i)
-            # 交叉
-            self.crossover(i)
+    def run(self, g):
+        self.best_i, self.best_s, self.best_f = self.get_current()
+        self.hbsc.append(self.best_f)
 
-    def roulette(self):
-        """对种群中的个体进行选择
-        :return:
-        """
-        roulette_list = copy.copy(self.current_fitness_store)
+        self.roulette(g)
+        self.mutation(g)
+        self.crossover(g)
 
-        # 对求最小值和最大值进行一个判断
-        if self.optimal_minimal:
-            # 如果是求最小值，就将数值倒过来
-            for i, val in enumerate(roulette_list):
-                if roulette_list[i] != 0:
-                    roulette_list[i] = 1 / roulette_list[i]
+    def roulette(self, g):
+        for i in range(1, self.np):
+            if i == self.best_i:
+                continue
+            ri = np.random.choice(np.arange(self.np), p=self.get_probabilities())
+            self.sc[i] = self.sc[ri][:]
 
-        current_fitness_sum = sum(roulette_list)
+    def mutation(self, g):
+        self.fc = self.equip_procedure_all()
+        mr = self.mrg(g)
+        for i in range(1, self.np):
+            if i == self.best_i:
+                continue
+            s_new = deepcopy(self.sc[i])
+            if np.random.random() < mr:
+                sj = floor(np.random.random() * self.n)
+                s_new[sj] = np.random.uniform(self.lb[sj], self.ub[sj])
 
-        # 进行选择
+            if not self.better_than(i, s_new):
+                self.sc[i] = s_new
+
+    def crossover(self, g):
+        cr = self.crg(g)
         for i in range(self.np):
-            if i != self.current_best_index:
-                rand = random.uniform(0, current_fitness_sum)
-                temp_roulette_rate = 0.0
-                temp_j = 0
+            s_new = deepcopy(self.sc[i])
+            if np.random.random() < cr:
+                si = floor(np.random.random() * self.np)
+                sj = floor(np.random.random() * self.n)
+                s_new[sj] = self.sc[si,sj]
 
-                for j, val in enumerate(roulette_list):
-                    temp_roulette_rate += val
-
-                    if rand < temp_roulette_rate:
-                        temp_j = j
-                        break
-
-                # 将第i次循环选中的个体，赋值给第i个个体
-                self.solutions[i].vector = copy.copy(self.solutions[temp_j].vector)
-
-    def mutation(self, gen):
-        """mutation 变异
-        :return:
-        """
-        al = self.factors['al'].generate(gen)
-        l = list(range(self.np))
-        l.pop(self.current_best_index)
-
-        for i in l:
-            # 依条件需要变异的分量下标
-            index = random.randint(0, self.n - 1)
-            rand_probability = random.random()
-
-            if rand_probability < al:
-                self.solutions[i].vector[index] = random.uniform(self.lowerxs[index], self.upperxs[index])
-
-    def crossover(self, gen):
-        """crossover 交叉
-        :return:
-        """
-        cr = self.factors['cr'].generate(gen)
-
-        for i in range(0, self.np, 2):
-            # 依条件需要交叉的分量下标
-            index = random.randint(0, self.n - 1)
-            rand_probability = random.random()
-
-            if rand_probability < cr:
-                self.solutions[i].vector[index], self.solutions[i+1].vector[index] = \
-                                                       self.solutions[i+1].vector[index], self.solutions[i].vector[index]
+            if not self.better_than(i, s_new):
+                self.sc[i] = s_new

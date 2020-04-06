@@ -1,13 +1,13 @@
 # -*- coding:utf-8 -*-
 # @Time : 2020/4/2 15:00
 # @Author : a2htray
-# @File : DE.py
+# @File : WOA.py
 # @Desc : 实验脚本
 
 import time
 from eas.target import fs
 import numpy as np
-from eas import DE
+from eas import WOA
 import sys
 from eas import experiment
 
@@ -15,13 +15,13 @@ from eas import experiment
 # 参数项
 func_key = sys.argv[1]
 n = int(sys.argv[2])
-lb = np.array([-100] * n)  # 向量各分量下限
-ub = np.array([100] * n)  # 向量各分量上限
+lb = np.array([-600] * n)  # 向量各分量下限
+ub = np.array([600] * n)  # 向量各分量上限
 
 # 开始
 time_str = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))
 log_file = open(
-    './storages/logs/DE-%s-%d-%d-%d.csv' \
+    './storages/logs/WOA-%s-%d-%d-%d.csv' \
     % (func_key,
        n,
        int(sys.argv[3]),
@@ -31,7 +31,7 @@ log_file = open(
 
 for i in range(int(sys.argv[4])):
     print('round %d start: ' % (i + 1))
-    ea = DE(_np=experiment.NP,
+    ea = WOA(_np=experiment.NP,
              n=n,
              lb=lb,
              ub=ub,

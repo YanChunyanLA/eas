@@ -2,6 +2,7 @@
 # @Time : 2020/3/31 13:14
 # @Author: a2htray
 # @File : BHRO.py
+# @Desc：测试脚本
 
 from eas import BHRO
 from sklearn.datasets import \

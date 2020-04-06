@@ -2,7 +2,7 @@
 # @Time : 2020/3/31 11:23
 # @Author: a2htray
 # @File : BHRO.py
-# @desc: HRO 算法的二进制版本
+# @Desc: HRO 算法的二进制版本
 
 import numpy as np
 import copy
@@ -22,7 +22,7 @@ class BHRO:
         # 随机数 < alpha 返回 0
         self.alpha = alpha
         # 试验次数
-        # >= nc 则需要重新生成解
+        # >= max_limit_num 则需要重新生成解
         self.nc = nc
         self.ncs = np.zeros(self.np)
         self.random_state = random_state
@@ -32,7 +32,7 @@ class BHRO:
         # 解集合
         self.bsc = np.array([self.init_solution() for _ in range(self.np)])
         self.accuracies = None
-        # gs: group size
+        # group_size: group size
         self.gs = self.np // 3
 
     def init_solution(self):
@@ -110,7 +110,6 @@ class BHRO:
                 t = abs(self.bsc[0][j] - self.bsc[si][j])
                 t = t if r3 >= self.alpha else (1 - t)
                 s_copy[j] = t ^ s_copy[j]
-                # print(t, s_copy[j])
 
             s_copy = self.must_one(s_copy)
             sca = self.procedure(s_copy)

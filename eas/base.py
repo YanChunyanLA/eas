@@ -1,6 +1,5 @@
 import numpy as np
 import eas
-from eas.factor import MatrixFactor
 from .solution import SolutionFactory
 from eas import helper
 from eas.boundary import Boundary
@@ -8,7 +7,7 @@ from eas.boundary import Boundary
 
 class BaseEA(object):
     def __init__(self, _np, n, upperxs, lowerxs, factors, **kwargs):
-        # 对每一个的个体进行初始化
+        # 对每一个的个体进行初始化append_best_fitness
         self.np = _np
         self.n = n
         # 初始化上下限

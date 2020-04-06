@@ -85,15 +85,19 @@ def f2(xs):
     return p1 + p2
 
 
+# def f3(xs):
+#     d = len(xs)
+#     result = 0
+#     for i in range(d):
+#         temp = 0
+#         for j in range(i):
+#             temp += xs[j]
+#         result += temp**2
+#     return result
+
 def f3(xs):
     d = len(xs)
-    result = 0
-    for i in range(d):
-        temp = 0
-        for j in range(i):
-            temp += xs[j]
-        result += temp**2
-    return result
+    return np.sum([np.sum(xs[0:i])**2 for i in range(d)])
 
 
 def f4(xs):
