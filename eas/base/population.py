@@ -5,7 +5,7 @@
 
 import typing
 from .typing import LimitType, FitnessType, ObjectiveFuncType
-from eas.base import create_indexed_solution
+from eas.base import create_indexed_solution, Solution
 
 
 class Population:
@@ -41,6 +41,12 @@ class Population:
         """
         for i in range(self.m):
             self.solutions[i].set_index(i)
+
+    def get_solution(self, i: int) -> Solution:
+        return self.solutions[i]
+
+    def set_solution(self, i: int, solution: Solution):
+        self.solutions[i] = solution
 
 
 

@@ -5,7 +5,7 @@
 
 import typing
 import numpy as np
-from .typing import LimitType
+from .typing import LimitType, ObjectiveFuncType
 
 
 def right_limit(limit: LimitType, n: int) -> np.array:
@@ -33,5 +33,3 @@ def init_vector(n: int, ulimit: np.array, llimit: np.array) -> np.array:
     :return: 返回 np.array 表示的向量
     """
     return (ulimit - llimit) * np.random.random(n) + llimit
-
-

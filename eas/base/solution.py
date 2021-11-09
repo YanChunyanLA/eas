@@ -5,7 +5,8 @@
 
 import typing
 import numpy as np
-from .typing import LimitType, FitnessType, ObjectiveFuncType
+import copy
+from .typing import LimitType, FitnessType, ObjectiveFuncType, LimitCheck
 from .utils import right_limit, init_vector
 
 
@@ -39,6 +40,28 @@ class Solution:
 
     def set_index(self, i: int):
         self.index = i
+
+    def copy(self):
+        return copy.deepcopy(self)
+
+    def get_value(self, i: int) -> float:
+        return self.values[i]
+
+    def set_value(self, i: int, value: float):
+        self.values[i] = value
+
+    def adjust_value(self, i: int, limit_check: LimitCheck):
+        if limit_check == limit_check.upper:
+            self.set_value(i, self._ulimit[i])
+        elif limit_check == limit_check.lower:
+            self.set_value(i, self._llimit[i])
+        else:
+            new_value = self._llimit[i] + np.random.random() * (self._ulimit[i] - self._llimit[i])
+            self.set_value(i, new_value)
+
+    def may_adjust_value(self, i: int, limit_check: LimitCheck):
+        if self.values[i] > self._ulimit[i] or self.values[i] < self._llimit[i]:
+            self.adjust_value(i, limit_check)
 
     def __str__(self) -> str:
         if self._fitness is None:

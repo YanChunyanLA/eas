@@ -5,3 +5,4 @@
 
 from .solution import Solution, create_indexed_solution
 from .population import Population
+from .ea import EAConfig, EA

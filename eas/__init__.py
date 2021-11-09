@@ -9,3 +9,5 @@
 # from .BHRO import BHRO
 # from .WOA import WOA
 # from .SSA import SSA
+from .hro import HRO
+from eas.base import set_debug
